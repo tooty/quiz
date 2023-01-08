@@ -1,0 +1,11 @@
+<div class="row">  
+  <div class="col" *ngFor="let kathegorie of fragen_liste">
+    <h1>{{kathegorie.name}}</h1>
+    <div class="row" *ngFor="let frage of kathegorie.fragen"> 
+      <button (click)="pushFrage(frage)"><h1>{{frage.value}}</h1> </button>
+    </div>
+  </div>
+
+  <app-gm-overlay></app-gm-overlay>
+</div>
+
