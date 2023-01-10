@@ -6,6 +6,6 @@
     </div>
   </div>
 
-  <app-gm-overlay></app-gm-overlay>
+  <app-gm-overlay *ngIf="curFrage.value != 0 " [currentFrage]="curFrage" (resetFrage)="curFrage = $event"></app-gm-overlay>
 </div>
 

@@ -23,6 +23,8 @@
     "bootstrap": "^5.2.3",
     "ngx-socket-io": "^4.4.0",
     "rxjs": "~7.5.0",
+    "sequelize": "^6.28.0",
+    "sqlite3": "^5.1.4",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
   },

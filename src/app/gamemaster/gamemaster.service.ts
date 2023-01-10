@@ -9,7 +9,11 @@ export class GamemasterService {
 
   constructor(private socket: Socket) { }
 
-  pushFrage(fr :Frage){
-    this.socket.emit('pushFrage', fr);
+  pushDashboard(t :string){
+    this.socket.emit('pushHTML', t);
+  }
+  incrementPlayer(p :string, a: number){
+    let data = {playerName: p, amount: a, sign: '+'};
+    this.socket.emit('updatePlayer', data);
   }
 }

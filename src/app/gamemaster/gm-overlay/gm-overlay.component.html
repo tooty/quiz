@@ -1,5 +1,26 @@
-<div>
-<p>gm-overlay works!</p>
-
-<img src="https://www.w3schools.com/css/paris.jpg"> 
+<div class="modal modal-alert position-static d-block py-5" tabindex="-1" role="dialog" id="modalChoice">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content rounded-3 shadow">
+      <div class="modal-header border-bottom-0">
+        <button (click) = "closeQ()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4 text-center">
+				<h5 class="mb-0">{{currentFrage.value}}</h5>
+        <div class=row>
+          <h3 class=col>Frage:</h3>
+          <h3 class=col>Antwort:</h3>
+        </div>
+        <div class=row>
+          <p class=col [innerHTML]="currentFrage.question" ></p>
+          <p class=col [innerHTML]="currentFrage.antwort"></p>
+        </div>
+      </div>
+      <div class="modal-footer flex-nowrap p-0">
+        <button (click)="pushText(currentFrage.question)" type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-end">Share Frage</button>
+        <button (click)="pushText(currentFrage.antwort)" type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 horder-end">Share Antwort</button>
+      </div>
+        <app-overlay-player></app-overlay-player>
+    </div>
+  </div>
 </div>
+

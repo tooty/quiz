@@ -7,10 +7,7 @@
 
 app-gm-overlay {
 	position: absolute;
-  align: center;
   top: 50%;
   left: 50%;
-  font-size: 100px;
-  background-color: red;
   transform: translate(-50%,-50%);
 }

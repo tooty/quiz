@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DashboardService } from './dashboard.service';
+import { SocketService } from '../socket.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,12 +7,12 @@ import { DashboardService } from './dashboard.service';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
-  constructor(private dashboardService: DashboardService){ }
+  constructor(private socketService: SocketService){ }
 
-  display: string = this.dashboardService.display; 
+  display: string = this.socketService.display; 
 
   ngOnInit(){
-    this.dashboardService.onEventHandler();
+    this.socketService.onPushHTMLEventHandler();
   }
 }
 

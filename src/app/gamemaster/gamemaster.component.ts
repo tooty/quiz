@@ -1,8 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Frage } from '../frage'
 import { Kathegorie } from '../kathegorie'
-import { GamemasterService } from './gamemaster.service'
-
 
 @Component({
   selector: 'app-gamemaster',
@@ -10,11 +8,12 @@ import { GamemasterService } from './gamemaster.service'
   styleUrls: ['./gamemaster.component.css']
 })
 export class GamemasterComponent {
-  constructor(private gamemasterService: GamemasterService) { }
 
   pushFrage(fr: Frage) {
-    this.gamemasterService.pushFrage(fr);
+    this.curFrage = fr;
   }
+
+  curFrage: Frage = {value: 0, question: "", antwort: ""};
 
   fragen_liste: Kathegorie[] = [
     {
@@ -92,6 +91,6 @@ export class GamemasterComponent {
         }
       ]
     }
-  ]
+  ];
 }
 

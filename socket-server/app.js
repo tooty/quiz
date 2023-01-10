@@ -1,22 +1,29 @@
-const app = require('express')();
-const http = require('http').Server(app);
-const io = require('socket.io')(http, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
+const express = require('express');
+const app = express();
+const http = require('http')
+const server = http.createServer(app);
+const morgan = require("morgan");
+const { createProxyMiddleware } = require('http-proxy-middleware');
+const { Server } = require("socket.io");
+const io = new Server(server);
+
+
+app.use(morgan('dev'));
+
+app.get('/api/users', (req, res) => {
+  res.sendFile(__dirname + '/src/users.json');
+  console.log('send users');
 });
 
+app.use('*', createProxyMiddleware({
+  target: "http://localhost:4200",
+  changeOrigin: true
+}));
 
-io.on("connection", socket => {
-	socket.on("pushFrage", frage => {
-    console.log(frage.question);
-    socket.broadcast.emit("Frage",frage);
-  });
 
-  console.log(`Socket ${socket.id} has connected`);
-});
+io.sockets.on('connection', require('./routes/socket')(io));
 
-http.listen(4444, () => {
+
+server.listen(4444, () => {
   console.log('Listening on port 4444');
 });
