@@ -1,0 +1,6 @@
+.buzzer{
+	height: 70vh;
+	width: 80vw;
+  transform: translate(10vw,30px);
+  text-align: center;
+}

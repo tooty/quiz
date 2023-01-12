@@ -1,10 +1,6 @@
-.container-fluid {
-	min-height:100vh;
+button{
+  font-size: 100%;
 }
-.row {
-	min-height: 18vh;
-}
-
 app-gm-overlay {
 	position: absolute;
   top: 50%;

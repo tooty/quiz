@@ -1,0 +1,8 @@
+div(class="row d1 text-white d-flex")
+	each kathegorie in fragen
+		div(class="col d2")
+			h1(class title)= kathegorie.name 
+			each frage in kathegorie.fragen
+				div(class="row-sm d3 rounded") 
+					p(class="display-1")= frage.value 
+					

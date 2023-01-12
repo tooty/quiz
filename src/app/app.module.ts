@@ -8,9 +8,9 @@ import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { GmOverlayComponent } from './gamemaster/gm-overlay/gm-overlay.component';
-import { OverlayPlayerComponent } from './gamemaster/gm-overlay/overlay-player/overlay-player.component';
+import { BuzzerComponent } from './buzzer/buzzer.component';
 
-const config: SocketIoConfig = { url: '', options: {} };
+const config: SocketIoConfig = { url: 'air.local:4444', options: {} };
 
 @NgModule({
   declarations: [
@@ -18,7 +18,7 @@ const config: SocketIoConfig = { url: '', options: {} };
     GamemasterComponent,
     DashboardComponent,
     GmOverlayComponent,
-    OverlayPlayerComponent
+    BuzzerComponent,
   ],
   imports: [
     BrowserModule,

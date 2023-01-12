@@ -1,13 +1,28 @@
-#canvas {
-	text-align: center;
-	font-size: 500%;
-	position: absolute; /* or absolute */
+.contentclass{
+	position: absolute;
   top: 50%;
   left: 50%;
-  /* bring your own prefixes */
-  transform: translate(-50%, -50%);
+  transform: translate(-50%,-50%);
+  text-align: center;
+
+}
+.main {
+  color: white;
+}
+
+
+.d1{
+}
+
+.d2{
+  background-color: #073642;
+  text-align: center;
+}
+.d3{
+  background-color: #002b36;
+  @extend .bg-primary;
 }
 
 img {
-  @extend fluid-image;
+  @extend .fluid-image;
 }

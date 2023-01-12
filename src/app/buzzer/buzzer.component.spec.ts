@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OverlayPlayerComponent } from './overlay-player.component';
+import { BuzzerComponent } from './buzzer.component';
 
-describe('OverlayPlayerComponent', () => {
-  let component: OverlayPlayerComponent;
-  let fixture: ComponentFixture<OverlayPlayerComponent>;
+describe('BuzzerComponent', () => {
+  let component: BuzzerComponent;
+  let fixture: ComponentFixture<BuzzerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OverlayPlayerComponent ]
+      declarations: [ BuzzerComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(OverlayPlayerComponent);
+    fixture = TestBed.createComponent(BuzzerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

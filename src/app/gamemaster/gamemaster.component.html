@@ -1,11 +1,13 @@
-<div class="row">  
-  <div class="col" *ngFor="let kathegorie of fragen_liste">
+<div class="container text-center ">
+<div class="row" id=board>  
+  <div class="col text-white" *ngFor="let kathegorie of fragen_liste">
     <h1>{{kathegorie.name}}</h1>
-    <div class="row" *ngFor="let frage of kathegorie.fragen"> 
-      <button (click)="pushFrage(frage)"><h1>{{frage.value}}</h1> </button>
+    <div class="row " *ngFor="let frage of kathegorie.fragen"> 
+      <button type="button" class="btn  btn-outline-primary " (click)="pushFrage(frage)"><p class=display-1>{{frage.value}}</p></button>
     </div>
   </div>
 
-  <app-gm-overlay *ngIf="curFrage.value != 0 " [currentFrage]="curFrage" (resetFrage)="curFrage = $event"></app-gm-overlay>
+  <app-gm-overlay  *ngIf="curFrage.value != 0 " [currentFrage]="curFrage" (resetFrage)="curFrage = $event"></app-gm-overlay>
+</div>
 </div>
 
