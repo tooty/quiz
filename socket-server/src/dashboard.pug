@@ -4,7 +4,6 @@ div(class="row d1 text-white d-flex")
 			h1(class title)= kathegorie.name 
 				each frage in kathegorie.fragen
 					div(class="row-sm d3 rounded") 
-						p= frage.active 
 						case frage.activ
 							when true 
 								p(class="display-1")= frage.value 

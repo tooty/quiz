@@ -1,4 +1,6 @@
-const fs = require('fs'); const pug = require('pug'); const jsonfile = require('jsonfile');
+const fs = require('fs'); 
+const pug = require('pug'); 
+const jsonfile = require('jsonfile');
 const playerFile = __dirname + '/../src/users.json';
 const fragenFile = __dirname + '/../src/fragen.json';
 let playerData = jsonfile.readFileSync(playerFile);
@@ -22,21 +24,17 @@ module.exports = function (io) {
       gameData = d
     })
     socket.on("updatePlayer", d => {
-      if (d.sign == "+") {
-        playerData.find(i => i.name === d.playerName).money += d.amount;
-      } else {
-        playerData.find(i => i.name === d.playerName).money -= d.amount;
-      }
       io.emit("sharePlayer", playerData);
       jsonfile.writeFileSync(playerFile,playerData);
     });
 
     socket.on("pushHTML", d => {
       if(d == null) {
-        d = renderDashboar();
+  			d = pug.renderFile(__dirname + '/../src/dashboard.pug',{fragen: gameData});
       } 
       else{
-        d = '<div class="contentclass">'+d+"</div>";
+  			d = pug.renderFile(__dirname + '/../src/frage.pug',{text: d});
+				d = '<div class="contentclass">'+d+"</div>";
       }
       io.emit("dashHTML",d);
     });
@@ -69,7 +67,3 @@ module.exports = function (io) {
   }
 }
 
-function renderDashboar(){
-  let html = pug.renderFile(__dirname + '/../src/dashboard.pug',{fragen: gameData});
-  return html 
-}
