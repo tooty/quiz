@@ -11,28 +11,31 @@
         <h3 class=col>Antwort:</h3>
       </div>
       <div class=row>
-        <p class=col [innerHTML]="currentFrage.question" ></p>
+        <p class=col [innerHTML]="currentFrage.frage" ></p>
         <p class=col [innerHTML]="currentFrage.antwort"></p>
       </div>
     </div>
     <div class="modal-footer flex-nowrap p-0">
-      <button (click)="pushText(currentFrage.question)" type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-end">Share Frage</button>
-      <button (click)="pushText(currentFrage.antwort)" type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 horder-end">Share Antwort</button>
+      <button (click)="pushText(currentFrage.frage)" type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-end">Share Frage</button>
+      <button (click)="pushAntwort(currentFrage.antwort)" type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 horder-end">Share Antwort</button>
     </div>
       <div class="container ">
         <div class=row>
             <div class="col text-center p-3 mb-2">BuzzerState</div>
-                <button class="btn col btn-lg border" (click)="setBuzzers('yellow')">♻️</button>
+                <button class="btn col btn-lg border" (click)="setBuzzers('yellow')">🐇</button>
                 <button class="col btn border" (click)="activateBuzzer()">🧨</button>
         </div>
         <div class=row>
           <div class="col   " *ngFor="let player of player_liste">
               <div class="row text-center">{{player.name}}</div>       
               <div class="row ">
-                <button class="btn border" (click)="changeMoney(player.name, 100, '+')">✅</button>
+                <button *ngIf="checkPlayer(player.name) == 0" class="btn border" (click)="changeMoney(player.name, currentFrage.value, 1)">✅</button>
               </div>       
               <div class="row ">
-                <button class="btn border" (click)="changeMoney(player.name, currentFrage.value, '-')">❌</button>
+                <button *ngIf="checkPlayer(player.name) == 0" class="btn border" (click)="changeMoney(player.name, currentFrage.value, -1)">❌</button>
+              </div>       
+              <div class="row ">
+                <button *ngIf="checkPlayer(player.name) != 0" class="btn border" (click)="changeMoney(player.name, currentFrage.value, 1)">♻️</button>
               </div>       
           </div>
         </div>

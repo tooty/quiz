@@ -1,10 +1,9 @@
-const fs = require('fs');
-const pug = require('pug');
-const jsonfile = require('jsonfile');
+const fs = require('fs'); const pug = require('pug'); const jsonfile = require('jsonfile');
 const playerFile = __dirname + '/../src/users.json';
 const fragenFile = __dirname + '/../src/fragen.json';
 let playerData = jsonfile.readFileSync(playerFile);
 const fragenData = jsonfile.readFileSync(fragenFile);
+var gameData = fragenData; 
 
 module.exports = function (io) {
   return function (socket) {
@@ -19,9 +18,10 @@ module.exports = function (io) {
       }
       io.emit("shareFragen",d);
     })
-
+    socket.on("pushGame", d => {
+      gameData = d
+    })
     socket.on("updatePlayer", d => {
-      console.log(d);
       if (d.sign == "+") {
         playerData.find(i => i.name === d.playerName).money += d.amount;
       } else {
@@ -58,13 +58,11 @@ module.exports = function (io) {
         }
       })
       io.emit("sharePlayer", playerData);
-      console.log(playerData);
     })
 
     socket.on("syncPlayerListe", ps => {
       playerData = ps;
       io.emit("sharePlayer", playerData);
-      console.log(playerData[0]);
     })
 
     console.log(`Socket ${socket.id} has connected`);
@@ -72,6 +70,6 @@ module.exports = function (io) {
 }
 
 function renderDashboar(){
-  let html = pug.renderFile(__dirname + '/../src/dashboard.pog',{fragen: fragenData});
+  let html = pug.renderFile(__dirname + '/../src/dashboard.pug',{fragen: gameData});
   return html 
 }

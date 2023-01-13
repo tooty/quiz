@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Player } from './player';
-import { Frage } from './frage';
 import { Kathegorie } from './kathegorie';
+import { Kat2 } from './game';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class SocketService {
     return this.socket.on("dashHTML", (t: string) => {callback(t)})
   }
   onSyncPlayerEventHandler(callback: Function){
-    return this.socket.on("sharePlayer", (p: Player[]) => {console.log(p);callback(p);})
+    return this.socket.on("sharePlayer", (p: Player[]) => {callback(p);})
   }
 
   onFragen(callback: Function){
@@ -30,7 +30,7 @@ export class SocketService {
     this.socket.emit('pushHTML', t);
   }
 
-  pushchangeMoney(p :string, a: number, s: string){
+  pushchangeMone(p :string, a: number, s: string){
     let data = {playerName: p, amount: a, sign: s};
     this.socket.emit('updatePlayer', data);
   }
@@ -44,5 +44,9 @@ export class SocketService {
   }
   pushBuzzer(p : Player){
     this.socket.emit('pushBuzzer', p);
+  }
+
+  pushGame(p : Kat2[]){
+    this.socket.emit('pushGame', p);
   }
 }

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Frage } from './frage'
-import { Game } from './game'
 import { Player } from './player'
 import { Kathegorie } from './kathegorie'
 import { SocketService } from './socket.service'
