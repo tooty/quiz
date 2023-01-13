@@ -15,3 +15,4 @@ export interface Kat2 {
   name: string,
   fragen: Frage2[]
 }
+

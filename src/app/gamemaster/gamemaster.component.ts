@@ -1,7 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { Frage } from '../frage'
+import { Component } from '@angular/core';
 import { Kathegorie } from '../kathegorie'
-import { Player } from '../player'
 import { SocketService } from '../socket.service'
 import { Kat2,Frage2,Player2 } from '../game'
 
@@ -10,6 +8,7 @@ import { Kat2,Frage2,Player2 } from '../game'
   templateUrl: './gamemaster.component.html',
   styleUrls: ['./gamemaster.component.css']
 })
+
 
 export class GamemasterComponent {
   fragen_liste: Kathegorie[] = []
@@ -23,7 +22,8 @@ export class GamemasterComponent {
       let storeage = localStorage.getItem('game');
       if (storeage != null){
         this.game = JSON.parse(storeage)
-      } else {
+        this.buildGame() 
+			} else {
         this.buildGame() 
         localStorage.setItem('game',JSON.stringify(this.game))
       }

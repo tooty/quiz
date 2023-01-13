@@ -8,7 +8,7 @@ import { Kat2 } from './game';
   providedIn: 'root'
 })
 export class SocketService {
-  constructor(private socket: Socket) { }
+  constructor(private socket: Socket) {}
   display: string = "defoult"
   
   onPushHTMLEventHandler(callback: Function) {
@@ -28,11 +28,6 @@ export class SocketService {
 
   pushDashboard(t :string|null){
     this.socket.emit('pushHTML', t);
-  }
-
-  pushchangeMone(p :string, a: number, s: string){
-    let data = {playerName: p, amount: a, sign: s};
-    this.socket.emit('updatePlayer', data);
   }
 
   syncPlayerListe(ps: Player[]){

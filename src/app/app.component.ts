@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { Frage } from './frage'
 import { Player } from './player'
-import { Kathegorie } from './kathegorie'
 import { SocketService } from './socket.service'
 import { ViewEncapsulation } from '@angular/core';
 

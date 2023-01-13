@@ -2,7 +2,6 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { SocketService } from '../../socket.service'
 import { Player } from '../../player'
 import { Kat2, Frage2 } from '../../game'
-import { underscoredIf } from 'sequelize/types/utils';
 
 
 @Component({
@@ -75,7 +74,7 @@ export class GmOverlayComponent {
 
   changeMoney(pName: string, amount: number, sign: number){
     let before = this.checkPlayer(pName)
-    if (before != 0) {
+    if (before != 0) { //reset Case
       sign = before * -1 
       this.game.map(k => {
         var a = k.fragen.find(f => (f.key == this.currentFrage.key))
@@ -84,7 +83,7 @@ export class GmOverlayComponent {
         }
       })
     }
-    else{
+    else{  
       this.game.map(k => {
         var a = k.fragen.find(f => (f.key == this.currentFrage.key))
         if (a != undefined) {
@@ -97,9 +96,8 @@ export class GmOverlayComponent {
     if (p != undefined) {
       p.money += amount * sign
     }
-    this.socketService.syncPlayerListe(this.player_liste)
-    
 
+    this.socketService.syncPlayerListe(this.player_liste)
     this.gamechange.emit(this.game);
   }
 }

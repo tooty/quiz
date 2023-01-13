@@ -19,11 +19,7 @@ export class BuzzerComponent {
       this.socketService.pushLogin(this.me);
     }
     this.socketService.onSyncPlayerEventHandler((p: Player[]) => {
-      p.forEach((player) => {
-        if (this.me.name == player.name){
-          this.me = player;
-        }
-      })
+			this.me = p.find(pl => (pl.name == this.me.name)) ?? this.me
     })
   }
   login(name: string){
@@ -34,6 +30,4 @@ export class BuzzerComponent {
   pushBuzzer(){
     this.socketService.pushBuzzer(this.me);
   }
-
-
 }
