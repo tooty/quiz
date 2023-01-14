@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Player } from './player'
+import { Player } from './game'
 import { SocketService } from './socket.service'
 import { ViewEncapsulation } from '@angular/core';
 
@@ -12,12 +12,14 @@ import { ViewEncapsulation } from '@angular/core';
 export class AppComponent {
   title = 'quiz';
   player_liste: Player[] = [];
-  constructor(private socketService: SocketService) { };
+  constructor(private socketService: SocketService) { 
+    socketService.player_liste.subscribe(l => {
+      this.player_liste = l;
+      sessionStorage.setItem('player', JSON.stringify(this.player_liste));
+    })
+  };
 
   ngOnInit(){
-    this.socketService.onSyncPlayerEventHandler((data: Player[])=>{
-      this.player_liste = data;
-      sessionStorage.setItem('player', JSON.stringify(this.player_liste));
-    });
+    this.socketService.onSyncPlayerEventHandler();
   }
 }

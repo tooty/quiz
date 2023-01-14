@@ -8,7 +8,11 @@
     </div>
   </div>
 
-  <app-gm-overlay  *ngIf="curFrage.value != 0 " [currentFrage]="curFrage" [game]="game" (gamechange)="onGameChange($event)" (resetFrage)="curFrage = $event"></app-gm-overlay>
+  <app-gm-overlay  *ngIf="(showOverlay == true)" [currentFrage]="currentFrage" [game]="game" (gamechange)="onGameChange($event)" (showOverlay)="showOverlay = $event"></app-gm-overlay>
 </div>
 </div>
-
+<div *ngIf="game[0] == undefined">
+<input type="file" class="file-input"
+       (change)="onFileSelected($event)" #fileUpload>
+<button type="button" class="btn  btn-outline-secondary" (click)="buildGame()"><p class=display-1>buildGame</p></button>
+</div>

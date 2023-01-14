@@ -1,5 +1,5 @@
 <div class="input-group mb-3" *ngIf="(me.name == '')">
-  <input #player_name type="text" class="form-control" placeholder="Name" aria-label="name" aria-describedby="basic-addon2">
+  <input #player_name (keyup.enter)="login(player_name.value)" type="text" class="form-control" placeholder="Name" aria-label="name" aria-describedby="basic-addon2">
   <div class="input-group-append">
     <span (click)="login(player_name.value)" class="input-group-text" id="basic-addon2">Login</span>
   </div>

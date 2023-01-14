@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { Player } from './player';
-import { Kathegorie } from './kathegorie';
+import { Player } from './game';
 import { Kat2 } from './game';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,20 +10,15 @@ import { Kat2 } from './game';
 export class SocketService {
   constructor(private socket: Socket) {}
   display: string = "defoult"
-  
-  onPushHTMLEventHandler(callback: Function) {
+  player_liste = new BehaviorSubject<Player[]>([])
+
+  onHTMLEventHandler(callback: Function) {
     return this.socket.on("dashHTML", (t: string) => {callback(t)})
   }
-  onSyncPlayerEventHandler(callback: Function){
-    return this.socket.on("sharePlayer", (p: Player[]) => {callback(p);})
-  }
-
-  onFragen(callback: Function){
-    return this.socket.on("shareFragen", (d: Kathegorie[]) => {callback(d)})
-  }
-
-  pushFragen(changes: Kathegorie[]|null) { 
-    this.socket.emit('pushFragen', changes);
+  onSyncPlayerEventHandler(){
+    this.socket.on("sharePlayer", (p: Player[]) => {
+      this.player_liste.next(p)
+    })
   }
 
   pushDashboard(t :string|null){

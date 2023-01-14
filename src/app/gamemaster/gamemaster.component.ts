@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { Kathegorie } from '../kathegorie'
 import { SocketService } from '../socket.service'
-import { Kat2,Frage2,Player2 } from '../game'
+import { Kat2,Frage2,PlayerGame, Kathegorie } from '../game'
 
 @Component({
   selector: 'app-gamemaster',
@@ -9,55 +8,57 @@ import { Kat2,Frage2,Player2 } from '../game'
   styleUrls: ['./gamemaster.component.css']
 })
 
-
 export class GamemasterComponent {
-  fragen_liste: Kathegorie[] = []
   game: Kat2[] =  [] 
-  
+	currentFrage: Frage2 = {
+    key:0,activ:true,value:0,antwort:"",frage:""
+  }
+ 	showOverlay: boolean = false 
 
   constructor(private socketService: SocketService){}
+
   ngOnInit(){
-    this.socketService.onFragen((d: Kathegorie[]) => {
-      this.fragen_liste = d; 
-      let storeage = localStorage.getItem('game');
-      if (storeage != null){
-        this.game = JSON.parse(storeage)
-        this.buildGame() 
-			} else {
-        this.buildGame() 
-        localStorage.setItem('game',JSON.stringify(this.game))
-      }
-    });
-    this.socketService.pushFragen(null);
+    this.game = JSON.parse(localStorage.getItem('game') ?? "[]" ) || []
+    this.onGameChange(this.game)
   }
+
   onGameChange(game: Kat2[]){
     this.game = game;
     localStorage.setItem('game',JSON.stringify(this.game))
     this.socketService.pushGame(game)
   }
 
-  pushFrage(fr: Frage2) {
-    this.curFrage = fr;
-  }
-  ngOngamechange(){
+	onFileSelected(event:any){
+		let reader = new FileReader()
+		reader.onload = this.onFileLoaded
+	  reader.readAsText(event.target.files[0])
+	}
 
+ 	onFileLoaded (event:any) {
+    localStorage.setItem('fragen',event.target.result)
+	}
+
+  pushFrage(fr: Frage2) {
+    this.currentFrage = fr;
+    this.showOverlay = true
+    console.log(this.showOverlay)
   }
+
   buildGame(){
-    let kat:Kat2[] = []
+		let fragen:string = localStorage.getItem('fragen')?? ""
+		let fragenO:Kathegorie[] = JSON.parse(fragen) 
+    let game:Kat2[] = []
     let fr:Frage2[] = [] 
-    let p: Player2[]=[] 
     let i = 0
-    this.fragen_liste.map(k=>{
+    fragenO.map(k=>{
       k.fragen.map(f => {
-        fr.push({player: p,value: f.value,frage: f.question, antwort: f.antwort,activ: true,key: i})
+        fr.push({value: f.value,frage: f.question, antwort: f.antwort,activ: true,key: i})
         i++
       })
-      kat.push({name:k.name,fragen:fr});
+      game.push({name:k.name,fragen:fr});
       fr = [] 
     })
-    this.game = kat;
+    this.onGameChange(game);
   }
-
-  curFrage: Frage2 = {key: 0,player: [],value: 0,frage: "",antwort: "",activ: true};
 }
 

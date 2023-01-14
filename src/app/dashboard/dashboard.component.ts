@@ -13,7 +13,7 @@ export class DashboardComponent {
   canvasHTML: string = ""
 
   ngOnInit() {
-    this.socketService.onPushHTMLEventHandler((d: string)=>{
+    this.socketService.onHTMLEventHandler((d: string)=>{
       this.canvasHTML = d;
     });
     this.socketService.pushDashboard(null);
