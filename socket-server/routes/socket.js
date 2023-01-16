@@ -5,10 +5,11 @@ var pug = require("pug");
 var jsonfile = require("jsonfile");
 var player_list = new rxjs_1.BehaviorSubject([]);
 var gameData = [];
-var socketids = [];
+var sessions = [];
 module.exports = function (io) {
     return function (socket) {
         socket.emit("loginRequest");
+        var sessionid = socket.handshake.headers.cookie;
         socket.on("pushGame", function (d) {
             gameData = d;
         });
@@ -32,16 +33,12 @@ module.exports = function (io) {
                     player_list.next(next);
                     sharePlayer(io);
                 }
-                var old = socketids.find(function (s) { return (s.name == p.name); });
+                var old = sessions.find(function (s) { return (s.name == p.name); });
                 if (old == undefined) {
-                    socketids.push({ name: p.name, id: socket.id });
-                    console.log("Login add: " + p.name);
-                    console.log(socketids);
+                    sessions.push({ name: p.name, id: sessionid });
                 }
                 else {
-                    old.id = socket.id;
-                    console.log("Login replace: " + p.name);
-                    console.log(socketids);
+                    old.id = sessionid;
                 }
             }
         });
@@ -59,9 +56,8 @@ module.exports = function (io) {
             sharePlayer(io);
         });
         socket.on('disconnect', function () {
-            socketids = socketids.filter(function (s) { return (s.id == socket.id); });
+            sessions = sessions.filter(function (s) { return (s.id != sessionid); });
             console.log("Socket ".concat(socket.id, " has disconnected"));
-            console.log(socketids);
         });
         console.log("Socket ".concat(socket.id, " has connected"));
         sharePlayer(io);
@@ -69,15 +65,12 @@ module.exports = function (io) {
 };
 function sharePlayer(io) {
     var player_l = player_list.value;
-    console.log(player_l);
     player_l.filter(function (p) { return (p.buzzerState == "yellow"); }).map(function (py) {
-        if (socketids.find(function (s) { return (s.name == py.name); }) == undefined) {
+        if (sessions.find(function (s) { return (s.name == py.name); }) == undefined) {
             py.buzzerState = "none";
         }
     });
     player_list.next(player_l);
-    console.log("Loged in users");
-    console.log(socketids);
     io.emit("sharePlayer", player_list.value);
 }
 //# sourceMappingURL=socket.js.map

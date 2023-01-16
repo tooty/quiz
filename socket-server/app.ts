@@ -6,7 +6,7 @@ const morgan = require("morgan");
 const { createProxyMiddleware } = require('http-proxy-middleware');
 import { Server } from "socket.io"
 //const io = new Server(server);
-const io = new Server(server);
+const io = new Server(server,{cookie: true});
 
 
 app.use(morgan('dev'));

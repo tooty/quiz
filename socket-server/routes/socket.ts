@@ -1,4 +1,4 @@
-interface Socketid {name: string, id: string}
+interface session {name: string, id: string, connected: boolean}
 import { Socket,Server } from "socket.io"
 import { Kat2,Player } from "../../src/app/game"
 import { BehaviorSubject } from "rxjs"
@@ -7,11 +7,13 @@ const jsonfile = require("jsonfile")
 
 const player_list = new BehaviorSubject<Player[]>([])
 let gameData: Kat2[] = []
-let socketids: Socketid[] = []
+let sessions: session[] = []
 
 module.exports = function (io: Server) {
     return function (socket: Socket) {
         socket.emit("loginRequest");
+        let sessionid = socket.handshake.headers.cookie
+        sessions.find(s => (s.id == sessionid)).connected = true
 
         socket.on("pushGame",(d: Kat2[]) => {
             gameData = d;
@@ -38,15 +40,11 @@ module.exports = function (io: Server) {
                     player_list.next(next);         
                     sharePlayer(io)
                 }
-                let old = socketids.find(s => (s.name == p.name))
+                let old = sessions.find(s => (s.name == p.name))
                 if (old == undefined) {
-                    socketids.push({name: p.name, id: socket.id})
-                    console.log("Login add: " + p.name)
-                    console.log(socketids)
+                    sessions.push({name: p.name, id: sessionid, connected: true})
                 } else {
-                    old.id = socket.id
-                    console.log("Login replace: " + p.name)
-                    console.log(socketids)
+                    old.id = sessionid 
                 }
             }
         });
@@ -65,9 +63,8 @@ module.exports = function (io: Server) {
         })
 
         socket.on('disconnect', () => {
-            socketids = socketids.filter((s: Socketid) => (s.id == socket.id)) 
+            sessions.find((s) => (s.id != sessionid)).connected = false
             console.log(`Socket ${socket.id} has disconnected`);
-            console.log(socketids)
         })
 
         console.log(`Socket ${socket.id} has connected`);
@@ -77,14 +74,14 @@ module.exports = function (io: Server) {
 
 function sharePlayer(io: Server) {
       let player_l = player_list.value;
-      console.log(player_l)
       player_l.filter(p => (p.buzzerState == "yellow")).map(py=> {
-        if (socketids.find(s => (s.name == py.name)) == undefined){
+        if (sessions.find(s => (s.name == py.name)) == undefined){
+          py.buzzerState = "none"
+        }
+        if (sessions.find(s => (s.name == py.name)).connected == false){
           py.buzzerState = "none"
         }
       })
       player_list.next(player_l);
-      console.log("Loged in users");
-      console.log(socketids);
       io.emit("sharePlayer", player_list.value);
 }

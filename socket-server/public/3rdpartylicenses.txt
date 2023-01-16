@@ -126,6 +126,9 @@ engine.io-client
 
 engine.io-parser
 
+ngx-cookie-service
+MIT
+
 ngx-socket-io
 MIT
 MIT License
