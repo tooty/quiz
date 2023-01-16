@@ -10,7 +10,9 @@ import { Player } from '../game';
 export class BuzzerComponent {
   me: Player = {name: "", money: 0, buzzerState: "none"};
 
-  constructor(private socketService: SocketService) {}
+  constructor(private socketService: SocketService) {
+    this.socketService.onLoginRequest(this.me)
+  }
 
   ngOnInit(){
     let n = localStorage.getItem("name");
@@ -21,7 +23,6 @@ export class BuzzerComponent {
     this.socketService.player_liste.subscribe( list => {
       this.me = list.find(pl => (pl.name == this.me.name)) ?? this.me
     })
-    this.socketService.onLoginRequest(this.me)
   }
 
   login(name: string){

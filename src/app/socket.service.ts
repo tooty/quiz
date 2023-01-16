@@ -3,7 +3,6 @@ import { Socket } from 'ngx-socket-io';
 import { Player } from './game';
 import { Kat2 } from './game';
 import { BehaviorSubject } from 'rxjs';
-import { NONE_TYPE } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'

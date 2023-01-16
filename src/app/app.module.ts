@@ -3,14 +3,16 @@ import { BrowserModule } from '@angular/platform-browser';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
-import { GamemasterComponent } from './gamemaster/gamemaster.component';
-import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+//Components
+import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { GamemasterComponent } from './gamemaster/gamemaster.component';
 import { GmOverlayComponent } from './gamemaster/gm-overlay/gm-overlay.component';
 import { BuzzerComponent } from './buzzer/buzzer.component';
 
-const config: SocketIoConfig = { url: 'air.local:4444', options: {} };
+const config: SocketIoConfig = { url: 'air.local:4444', options: {}};
 
 @NgModule({
   declarations: [
@@ -33,4 +35,3 @@ const config: SocketIoConfig = { url: 'air.local:4444', options: {} };
 
 export class AppModule { 
 }
-
