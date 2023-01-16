@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { SocketService } from '../socket.service'
-import { Kat2,Frage2,PlayerGame, Kathegorie } from '../game'
+import { Kat2,Frage2, Kathegorie } from '../game'
 
 @Component({
   selector: 'app-gamemaster',
@@ -22,6 +22,11 @@ export class GamemasterComponent {
     this.onGameChange(this.game)
   }
 
+  pushFrage(fr: Frage2) {
+    this.currentFrage = fr;
+    this.showOverlay = true
+  }
+
   onGameChange(game: Kat2[]){
     this.game = game;
     localStorage.setItem('game',JSON.stringify(this.game))
@@ -38,11 +43,6 @@ export class GamemasterComponent {
     localStorage.setItem('fragen',event.target.result)
 	}
 
-  pushFrage(fr: Frage2) {
-    this.currentFrage = fr;
-    this.showOverlay = true
-    console.log(this.showOverlay)
-  }
 
   buildGame(){
 		let fragen:string = localStorage.getItem('fragen')?? ""

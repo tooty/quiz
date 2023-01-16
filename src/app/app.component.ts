@@ -15,7 +15,6 @@ export class AppComponent {
   constructor(private socketService: SocketService) { 
     socketService.player_liste.subscribe(l => {
       this.player_liste = l;
-      sessionStorage.setItem('player', JSON.stringify(this.player_liste));
     })
   };
 

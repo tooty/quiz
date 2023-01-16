@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { SocketService } from '../socket.service';
 import { Player } from '../game';
-import { Observable, share } from 'rxjs';
 
 @Component({
   selector: 'app-buzzer',
@@ -19,10 +18,12 @@ export class BuzzerComponent {
       this.me.name = n 
       this.socketService.pushLogin(this.me);
     }
-    this.socketService.player_liste.subscribe( list =>
+    this.socketService.player_liste.subscribe( list => {
       this.me = list.find(pl => (pl.name == this.me.name)) ?? this.me
-    )
+    })
+    this.socketService.onLoginRequest(this.me)
   }
+
   login(name: string){
     this.me = {name: name, money: 0, buzzerState: this.me.buzzerState};
     this.socketService.pushLogin(this.me);

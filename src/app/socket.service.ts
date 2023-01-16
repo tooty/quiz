@@ -3,16 +3,21 @@ import { Socket } from 'ngx-socket-io';
 import { Player } from './game';
 import { Kat2 } from './game';
 import { BehaviorSubject } from 'rxjs';
+import { NONE_TYPE } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketService {
   constructor(private socket: Socket) {}
-  display: string = "defoult"
   player_liste = new BehaviorSubject<Player[]>([])
 
-  onHTMLEventHandler(callback: Function) {
+  onLoginRequest(me: Player){
+    this.socket.on("loginRequest", () => {
+      this.socket.emit("pushLogin", me)
+    })
+  }
+  onHTMLEventHandler(callback: Function) { //subs dashboard
     return this.socket.on("dashHTML", (t: string) => {callback(t)})
   }
   onSyncPlayerEventHandler(){

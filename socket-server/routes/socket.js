@@ -1,4 +1,3 @@
-const fs = require('fs'); 
 const pug = require('pug'); 
 const jsonfile = require('jsonfile');
 const playerFile = __dirname + '/../src/users.json';
@@ -6,27 +5,14 @@ const fragenFile = __dirname + '/../src/fragen.json';
 let playerData = jsonfile.readFileSync(playerFile);
 const fragenData = jsonfile.readFileSync(fragenFile);
 var gameData = fragenData; 
+var socketids = []
 
 module.exports = function (io) {
   return function (socket) {
-    io.emit("sharePlayer", playerData);
-
-    socket.on("pushFragen", d => {
-      if (d != null){
-        fs.writeFileSync(fragenFile,JSON.stringify(d));
-        fragenData = d;
-      } else {
-        d = jsonfile.readFileSync(fragenFile);
-      }
-      io.emit("shareFragen",d);
-    })
+    socket.emit("loginRequest")
     socket.on("pushGame", d => {
       gameData = d
     })
-    socket.on("updatePlayer", d => {
-      io.emit("sharePlayer", playerData);
-      jsonfile.writeFileSync(playerFile,playerData);
-    });
 
     socket.on("pushHTML", d => {
       if(d == null) {
@@ -40,11 +26,20 @@ module.exports = function (io) {
     });
 
     socket.on('pushLogin', p => {
-      let neu = (playerData.find(player => player.name == p.name) == undefined);
-      if  (neu)  {
-        playerData.push(p);         
-        jsonfile.writeFileSync(playerFile,playerData);
-        io.emit("sharePlayer", playerData);
+      if (p.name != "") {
+        let neu = (playerData.find(
+          player => (player.name == p.name)) == undefined);
+        if  (neu)  {
+          playerData.push(p);         
+          jsonfile.writeFileSync(playerFile,playerData);
+          sharePlayer(io)
+        }
+        old = socketids.find(s => (s.name == p.name))
+        if (old == undefined) {
+          socketids.push({name: p.name, id: socket.id})
+        } else {
+          socketids.find(s => (s.name == p.name)).id = socket.id
+        }
       }
     });
     
@@ -55,15 +50,30 @@ module.exports = function (io) {
           player.buzzerState = "green";
         }
       })
-      io.emit("sharePlayer", playerData);
+      sharePlayer(io)
     })
 
     socket.on("syncPlayerListe", ps => {
       playerData = ps;
-      io.emit("sharePlayer", playerData);
+      sharePlayer(io)
+    })
+
+    socket.on('disconnect', () => {
+      socketids = socketids.filter(s => (s.id != socket.id))
     })
 
     console.log(`Socket ${socket.id} has connected`);
+    sharePlayer(io)
   }
 }
 
+function sharePlayer(io) {
+      playerData.filter(p => (p.buzzerState == "yellow")).map(py=> {
+        if (socketids.find(s => (s.name == py.name)) == undefined){
+          py.buzzerState = "none"
+        }
+      })
+      console.log(socketids)
+      io.emit("sharePlayer", playerData);
+      jsonfile.writeFileSync(playerFile,playerData);
+}
