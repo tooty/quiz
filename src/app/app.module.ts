@@ -12,21 +12,27 @@ import { GamemasterComponent } from './gamemaster/gamemaster.component';
 import { GmOverlayComponent } from './gamemaster/gm-overlay/gm-overlay.component';
 import { BuzzerComponent } from './buzzer/buzzer.component';
 import {CookieService} from 'ngx-cookie-service';
+import { DemoComponent } from './demo/demo.component';
+import { sanitizeHtmlPipe } from './sanitize-html.pipe';
 
-const config: SocketIoConfig = { url: 'air.local:4444',options:{
-  auth: {
-    token : document.cookie
-  }
- }
+const config: SocketIoConfig = {
+  options: {
+    auth: {
+      token: localStorage.getItem("name") ?? ""
+    }
+  },
+  url: window.location.host 
 };
 
 @NgModule({
   declarations: [
+    sanitizeHtmlPipe,
     AppComponent,
     GamemasterComponent,
     DashboardComponent,
     GmOverlayComponent,
     BuzzerComponent,
+    DemoComponent,
   ],
   imports: [
     BrowserModule,

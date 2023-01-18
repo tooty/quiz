@@ -1,23 +1,42 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, ViewChild, } from '@angular/core';
 import { SocketService } from '../../socket.service'
 import { Kat2, Frage2, Player} from '../../game'
-
+import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-gm-overlay',
   templateUrl: './gm-overlay.component.html',
-  styleUrls: ['./gm-overlay.component.css']
+  styleUrls: ['./gm-overlay.component.css'],
+  providers: [NgbModalConfig, NgbModal],
 })
-export class GmOverlayComponent {
+export class GmOverlayComponent implements OnChanges{
   @Input() currentFrage: Frage2 = {key: 0,value: 0,frage: "a",antwort: "b",activ: true}
   @Input() game: Kat2[] = [];
+  @Input() show: boolean = false
   @Output() showOverlay = new EventEmitter<boolean>();
   @Output() gamechange = new EventEmitter<Kat2[]>();
+  @ViewChild("content") mycontent: any
 
-  player_liste: Player[] = []; //Updated via socket.io
+  player_liste: Player[] = []; 
+  currentAntwort: SafeHtml = ""
+  currentFrage2: SafeHtml = "" 
 
-  constructor(private socketService: SocketService) { }
+  constructor(private socketService: SocketService,
+              private sanitizer: DomSanitizer, 
+    config: NgbModalConfig, private modalService: NgbModal) { 
+    config.backdrop = 'static';
+    config.keyboard = false;
+  }
 
+  ngOnChanges(){
+    if (this.show == true){
+      this.modalService.open(this.mycontent, {size: 'l'})
+    }
+    this.currentAntwort = this.sanitizer.bypassSecurityTrustHtml(this.currentFrage.antwort)
+    this.currentFrage2 = this.sanitizer.bypassSecurityTrustHtml(this.currentFrage.frage)
+  }
+  
   ngOnInit(){
     this.player_liste = JSON.parse(sessionStorage.getItem('player') ?? "[]");
     this.socketService.player_liste.subscribe(l =>{
@@ -36,23 +55,17 @@ export class GmOverlayComponent {
 
   closeQ() {
     this.showOverlay.emit(false)
+    this.modalService.dismissAll()
     this.socketService.pushDashboard(null);
-    this.setBuzzers("none");
-    this.socketService.syncPlayerListe(this.player_liste);
+    this.socketService.resetBuzzer()
   }
 
-  setBuzzers(s: string){
-    this.player_liste.forEach((player) => {
-      player.buzzerState = s;
-    })
-    this.socketService.syncPlayerListe(this.player_liste);
+  testBuzzer(){
+    this.socketService.testBuzzer()
   }
-
+  
   activateBuzzer(){
-    this.player_liste.forEach((player) => {
-      player.buzzerState = "red";
-    })
-    this.socketService.syncPlayerListe(this.player_liste);
+    this.socketService.activateBuzzer();
   }
   
   checkPlayer(name: string) : number {
@@ -74,6 +87,6 @@ export class GmOverlayComponent {
     if (p != undefined) {
       p.money += amount * sign
     }
-    this.socketService.syncPlayerListe(this.player_liste)
+    this.socketService.syncPlayerList(this.player_liste)
   }
 }

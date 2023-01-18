@@ -7,12 +7,13 @@
       <button *ngIf="frage.activ" type="button" class="btn  btn-outline-primary" (click)="pushFrage(frage)"><p class=display-1>{{frage.value}}</p></button>
     </div>
   </div>
+</div>
+</div>
 
-  <app-gm-overlay  *ngIf="(showOverlay == true)" [currentFrage]="currentFrage" [game]="game" (gamechange)="onGameChange($event)" (showOverlay)="showOverlay = $event"></app-gm-overlay>
-</div>
-</div>
-<div *ngIf="game[0] == undefined">
-<input type="file" class="file-input"
-       (change)="onFileSelected($event)" #fileUpload>
-<button type="button" class="btn  btn-outline-secondary" (click)="buildGame()"><p class=display-1>buildGame</p></button>
-</div>
+<app-gm-overlay  
+  [currentFrage]="currentFrage" 
+  [game]="game" 
+  [show]="showOverlay" 
+  (gamechange)="onGameChange($event)" 
+  (showOverlay)="showOverlay = $event">
+</app-gm-overlay>

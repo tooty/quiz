@@ -9,19 +9,15 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class SocketService {
   constructor(private socket: Socket) {}
-  player_liste = new BehaviorSubject<Player[]>([])
+  player_liste = new BehaviorSubject<Player[]>(JSON.parse(localStorage.getItem("player")?? "[]"))
 
-  onLoginRequest(me: Player){
-    this.socket.on("loginRequest", () => {
-      this.socket.emit("pushLogin", me)
-    })
-  }
   onHTMLEventHandler(callback: Function) { //subs dashboard
-    return this.socket.on("dashHTML", (t: string) => {callback(t)})
+    return this.socket.on("dashHTML", (t: {content: boolean, data: string}) => {callback(t)})
   }
   onSyncPlayerEventHandler(){
     this.socket.on("sharePlayer", (p: Player[]) => {
       this.player_liste.next(p)
+      localStorage.setItem("player",JSON.stringify(p))
     })
   }
 
@@ -29,7 +25,7 @@ export class SocketService {
     this.socket.emit('pushHTML', t);
   }
 
-  syncPlayerListe(ps: Player[]){
+  syncPlayerList(ps: Player[]){
     this.socket.emit('syncPlayerListe', ps);
   }
 
@@ -42,5 +38,15 @@ export class SocketService {
 
   pushGame(p : Kat2[]){
     this.socket.emit('pushGame', p);
+  }
+  testBuzzer(){
+    this.socket.emit('testBuzzer');
+  }
+
+  resetBuzzer(){
+    this.socket.emit('resetBuzzer');
+  }
+  activateBuzzer(){
+    this.socket.emit('activateBuzzer');
   }
 }

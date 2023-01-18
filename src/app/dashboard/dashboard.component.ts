@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Sanitizer } from '@angular/core';
 import { SocketService } from '../socket.service';
 import { ViewEncapsulation } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,12 +11,20 @@ import { ViewEncapsulation } from '@angular/core';
   encapsulation: ViewEncapsulation.None
 })
 export class DashboardComponent {
-  constructor(private socketService: SocketService){ }
-  canvasHTML: string = ""
+  constructor(private socketService: SocketService,
+              private sanitizer: DomSanitizer ){ }
+  canvasHTML: SafeHtml = ""
+  dashboardHTML: string = ""
 
   ngOnInit() {
-    this.socketService.onHTMLEventHandler((d: string)=>{
-      this.canvasHTML = d;
+    this.socketService.onHTMLEventHandler((d: {content:boolean, data: string})=>{
+      if (d.content == true){
+        this.dashboardHTML = "";
+        this.canvasHTML = this.sanitizer.bypassSecurityTrustHtml(d.data);
+      }else{
+        this.dashboardHTML = d.data;
+        this.canvasHTML = "";
+      }
     });
     this.socketService.pushDashboard(null);
   }

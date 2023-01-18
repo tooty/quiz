@@ -10,9 +10,7 @@ import { Player } from '../game';
 export class BuzzerComponent {
   me: Player = {name: "", money: 0, buzzerState: "none"};
 
-  constructor(private socketService: SocketService) {
-    this.socketService.onLoginRequest(this.me)
-  }
+  constructor(private socketService: SocketService) {}
 
   ngOnInit(){
     let n = localStorage.getItem("name");

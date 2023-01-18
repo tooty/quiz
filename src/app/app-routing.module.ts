@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { GamemasterComponent } from './gamemaster/gamemaster.component';
 import { BuzzerComponent } from './buzzer/buzzer.component';
+import { DemoComponent } from './demo/demo.component';
 import { AppComponent } from './app.component';
 
 
@@ -18,6 +19,10 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent
+  },
+  {
+    path: 'demo',
+    component: DemoComponent
   }
 ];
 
