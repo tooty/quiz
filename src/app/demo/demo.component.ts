@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { Kat2,Frage2, Kathegorie } from '../game'
 
 @Component({
@@ -10,49 +10,46 @@ import { Kat2,Frage2, Kathegorie } from '../game'
 export class DemoComponent {
   game: Kat2[] = []
   reloade: boolean = true
+	currentFrage: Frage2 = {
+    key:0,activ:true,value:0,antwort:"",frage:""
+  }
+ 	showOverlay: boolean = false 
+  download: string=""
+
 @ViewChild("gm") mycontent: any
 
-  resetGame(){
-    localStorage.removeItem("fragen")
+  viewOverlay(frage: Frage2){
+    this.showOverlay = true
+    this.currentFrage = frage;
+  }
+
+  ngOnInit(){
     localStorage.removeItem("game")
   }
 
-  addCategory(){
-		let fragen0:string = localStorage.getItem('fragen')?? ""
-		let fragen:Kathegorie[] = JSON.parse(fragen0 || "[]")  
-    console.log(fragen)
-    fragen.push({name: "hallo", fragen:[]})
-    localStorage.setItem('fragen',JSON.stringify(fragen))
-    this.buildGame()
+  onGameChange(game: Kat2[]){
+    this.game = game;
+    localStorage.setItem('game',JSON.stringify(this.game))
   }
-  addQuestion(kat: Kat2){
-    this.reloade = !this.reloade 
-		let fragen0:string = localStorage.getItem('fragen')?? ""
-		let fragen:Kathegorie[] = JSON.parse(fragen0) 
-    let kathegorie = fragen.filter(k => (k.name == kat.name))
-    kathegorie.map(i => {i.fragen.push({question: "hallo", antwort: "muh", value: 0})})
-    localStorage.setItem('fragen',JSON.stringify(fragen))
-    this.buildGame()
-    this.reloade = !this.reloade 
+  changeCat(value: string, old: string){
+    let kat = this.game.find(k => (k.name == old)) 
+    if (kat != undefined){
+      kat.name = value
+    }
+  }
+  downloader(){
+    this.download = "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(this.game))??""
   }
 
-  buildGame(){
-		let fragen:string = localStorage.getItem('fragen')?? ""
-		let fragenO:Kathegorie[] = JSON.parse(fragen) 
-    let game:Kat2[] = []
-    let fr:Frage2[] = [] 
-    let i = 0
-    fragenO.map(k=>{
-      k.fragen.map(f => {
-        fr.push({value: f.value,frage: f.question, antwort: f.antwort,activ: true,key: i})
-        i++
-      })
-      game.push({name:k.name,fragen:fr});
-      fr = [] 
-    })
-    localStorage.setItem('game',JSON.stringify(game))
-    this.game = game
+  addCategory(){
+    let prototype: Kat2 = {name: "Neu", fragen:[]}
+    this.game.push(prototype)
   }
+  addQuestion(kat: Kat2){
+    let prototype: Frage2 = {value: 0, activ:true, antwort:"", frage: "",key: Math.random()}
+    this.game.find(k => (k.name == kat.name))?.fragen.push(prototype)
+  }
+
 	onFileSelected(event:any){
 		let reader = new FileReader()
 		reader.onload = this.onFileLoaded
@@ -60,6 +57,9 @@ export class DemoComponent {
 	}
 
  	onFileLoaded (event:any) {
-    localStorage.setItem('fragen',event.target.result)
+    localStorage.setItem('game',event.target.result)
 	}
+  buildGame(){
+    this.game=JSON.parse(localStorage.getItem('game')|| "[]")
+  }
 }

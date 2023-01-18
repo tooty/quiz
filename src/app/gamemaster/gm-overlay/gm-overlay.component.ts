@@ -21,6 +21,7 @@ export class GmOverlayComponent implements OnChanges{
   player_liste: Player[] = []; 
   currentAntwort: SafeHtml = ""
   currentFrage2: SafeHtml = "" 
+  gamemaster: boolean = false
 
   constructor(private socketService: SocketService,
               private sanitizer: DomSanitizer, 
@@ -28,10 +29,22 @@ export class GmOverlayComponent implements OnChanges{
     config.backdrop = 'static';
     config.keyboard = false;
   }
+  
+  antwortInput(value:string){
+    this.currentAntwort =  this.sanitizer.bypassSecurityTrustHtml(value)
+    this.currentFrage.antwort = value
+  }
+  frageInput(value:string){
+    this.currentFrage2 =  this.sanitizer.bypassSecurityTrustHtml(value)
+    this.currentFrage.frage = value
+  }
+  valueInput(value:string){
+    this.currentFrage.value = Number(value)
+  }
 
   ngOnChanges(){
     if (this.show == true){
-      this.modalService.open(this.mycontent, {size: 'l'})
+      this.modalService.open(this.mycontent, {size: 'xl'})
     }
     this.currentAntwort = this.sanitizer.bypassSecurityTrustHtml(this.currentFrage.antwort)
     this.currentFrage2 = this.sanitizer.bypassSecurityTrustHtml(this.currentFrage.frage)
@@ -42,6 +55,11 @@ export class GmOverlayComponent implements OnChanges{
     this.socketService.player_liste.subscribe(l =>{
       this.player_liste = l;
     })
+    if (window.location.href.includes("gamemaster") == true){
+      this.gamemaster = true
+    }else{
+      this.gamemaster = false
+    }
   }
 
   pushText(t: string) {
@@ -54,6 +72,11 @@ export class GmOverlayComponent implements OnChanges{
   }
 
   closeQ() {
+    this.game.map((k: Kat2) => {
+      let current = k.fragen.find(f => (f.key == this.currentFrage.key))
+      current = this.currentFrage
+    })
+    this.gamechange.next(this.game)
     this.showOverlay.emit(false)
     this.modalService.dismissAll()
     this.socketService.pushDashboard(null);
