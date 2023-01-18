@@ -10,7 +10,7 @@ import { AppComponent } from './app.component';
 const routes: Routes = [
   {
     path: '',
-    component: BuzzerComponent 
+    component: DemoComponent 
   },
   {
     path: 'gamemaster',
