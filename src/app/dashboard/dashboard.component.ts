@@ -17,6 +17,9 @@ export class DashboardComponent {
   dashboardHTML: string = ""
 
   ngOnInit() {
+    if (window.location.href.includes("github") == true){
+      this.canvasHTML = this.sanitizer.bypassSecurityTrustHtml(localStorage.getItem("current")?? "");
+    }
     this.socketService.onHTMLEventHandler((d: {content:boolean, data: string})=>{
       if (d.content == true){
         this.dashboardHTML = "";

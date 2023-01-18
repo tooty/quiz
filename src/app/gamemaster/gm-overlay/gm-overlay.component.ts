@@ -33,10 +33,12 @@ export class GmOverlayComponent implements OnChanges{
   antwortInput(value:string){
     this.currentAntwort =  this.sanitizer.bypassSecurityTrustHtml(value)
     this.currentFrage.antwort = value
+    localStorage.setItem("current", value) 
   }
   frageInput(value:string){
     this.currentFrage2 =  this.sanitizer.bypassSecurityTrustHtml(value)
     this.currentFrage.frage = value
+    localStorage.setItem("current", value) 
   }
   valueInput(value:string){
     this.currentFrage.value = Number(value)
