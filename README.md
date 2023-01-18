@@ -1,27 +1,33 @@
 # Quiz
+## Spiel erstellen
+Zum spiel erstellen in die [demo](https://tooty.github.io/quiz/demo) Seite 
+vorhandenes Spiel über 
+> chose File >> buildGame
+aufrufen
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.4.
+oder neues Spiel über 
+> rotes `+`
 
-## Development server
+Die Antwort Fragen Felder unterstützen jegliches HTML wie für Bilder.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+ ``<img src="Bild Qeulle"></img>``
 
-## Code scaffolding
+damit die ausreichend groß ist sollte jedoch lieber 
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+ ``<img class="img-fluid" src="Bild Qeulle"></img>``
 
-## Build
+verwendet werden. Die letzt bearbeitete Antwort/Frage kann über [dashboard](https://tooty.github.io/quiz/dashboard) in der "inSpiel" Ansicht angezeigt werden. (NeuLaden erneuert das letzt benutzte Textfeld) Oder Videos von YouTube mittels
+> Rechtsknick auf Video >> Einbettung Code kopieren >> einfügen in Frage/Antwort Feld   
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Eine kleine Demo kann durch laden und `chose File` von [json](https://raw.githubusercontent.com/tooty/quiz/gh-pages/game.json) angezeigt werden die Ansicht für den [Quizmaster](https://tooty.github.io/quiz/gamemaster) ist nach erstellen eines Spiel einsehbar hier kann aber ohne Backend nichts gemacht werden. 
+Neu Laden der demo Seite löscht alle Änderungen vorher also `sichern` drücken und Stand runterladen, der später wieder über `chose File` geladen werden kann.
+## Spiel spielen
+Für das eigentliche Spiel mit Buzzern, Echtzeit laden der dashboard Seite und Punktezählung muss nodejs und npm installier werden und anschließend
+```bash
+git clone git@github.com:tooty/quiz.git
+cd quiz
+cd socket-server
+npm install
+node app.js
+```
+ausgeführt werden.
