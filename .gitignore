@@ -22,6 +22,7 @@ yarn-error.log
 *.sublime-workspace
 
 # Visual Studio Code
+.vscode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -29,6 +30,7 @@ yarn-error.log
 !.vscode/extensions.json
 .history/*
 socket-server/.vscode/*
+.editorconfig
 
 # Miscellaneous
 /.angular/cache
@@ -42,9 +44,13 @@ testem.log
 socket-server/src/fragen.json
 socket-server/src/users.json
 socket-server/public/*
+socket-server/node_modules
 
 # System files
 .DS_Store
 Thumbs.db
 src/app/game.js
 src/app/game.js.map
+
+#tsc
+*js.map
