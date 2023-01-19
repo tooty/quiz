@@ -6,11 +6,10 @@ import { BuzzerComponent } from './buzzer/buzzer.component';
 import { DemoComponent } from './demo/demo.component';
 import { AppComponent } from './app.component';
 
-
 const routes: Routes = [
   {
     path: '',
-    component: BuzzerComponent 
+    component: BuzzerComponent,
   },
   {
     path: 'gamemaster',
@@ -18,18 +17,16 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: DashboardComponent
+    component: DashboardComponent,
   },
   {
     path: 'demo',
-    component: DemoComponent
-  }
+    component: DemoComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-
-export class AppRoutingModule { 
-}
+export class AppRoutingModule {}

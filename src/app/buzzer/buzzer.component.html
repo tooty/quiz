@@ -1,13 +1,39 @@
-<div class="input-group mb-3" *ngIf="(me.name == '')">
-  <input #player_name (keyup.enter)="login(player_name.value)" type="text" class="form-control" placeholder="Name" aria-label="name" aria-describedby="basic-addon2">
+<div class="input-group mb-3" *ngIf="me.name == ''">
+  <input
+    #player_name
+    (keyup.enter)="login(player_name.value)"
+    type="text"
+    class="form-control"
+    placeholder="Name"
+    aria-label="name"
+    aria-describedby="basic-addon2"
+  />
   <div class="input-group-append">
-    <span (click)="login(player_name.value)" class="input-group-text" id="basic-addon2">Login</span>
+    <span
+      (click)="login(player_name.value)"
+      class="input-group-text"
+      id="basic-addon2"
+      >Login</span
+    >
   </div>
 </div>
-<div class="display-1 text-white position-absolute top-50 start-50 translate-middle" *ngIf="(me != null)">
-  {{me.name}}
+<div
+  class="display-1 text-white position-absolute top-50 start-50 translate-middle"
+  *ngIf="me != null"
+>
+  {{ me.name }}
 </div>
 
-<button class="btn btn-danger buzzer rounded-5" *ngIf="(me != null && me.buzzerState == 'red')" (click)="pushBuzzer()"></button>
-<button class="btn btn-warning buzzer rounded-5" *ngIf="(me != null && me.buzzerState== 'yellow')"></button>
-<button class="btn btn-success buzzer rounded-5" *ngIf="(me != null && me.buzzerState== 'green')"></button>
+<button
+  class="btn btn-danger buzzer rounded-5"
+  *ngIf="me != null && me.buzzerState == 'red'"
+  (click)="pushBuzzer()"
+></button>
+<button
+  class="btn btn-warning buzzer rounded-5"
+  *ngIf="me != null && me.buzzerState == 'yellow'"
+></button>
+<button
+  class="btn btn-success buzzer rounded-5"
+  *ngIf="me != null && me.buzzerState == 'green'"
+></button>

@@ -11,17 +11,17 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { GamemasterComponent } from './gamemaster/gamemaster.component';
 import { GmOverlayComponent } from './gamemaster/gm-overlay/gm-overlay.component';
 import { BuzzerComponent } from './buzzer/buzzer.component';
-import {CookieService} from 'ngx-cookie-service';
+import { CookieService } from 'ngx-cookie-service';
 import { DemoComponent } from './demo/demo.component';
 import { sanitizeHtmlPipe } from './sanitize-html.pipe';
 
 const config: SocketIoConfig = {
   options: {
     auth: {
-      token: localStorage.getItem("name") ?? ""
-    }
+      token: localStorage.getItem('name') ?? '',
+    },
   },
-  url: window.location.host 
+  url: window.location.host,
 };
 
 @NgModule({
@@ -39,11 +39,9 @@ const config: SocketIoConfig = {
     AppRoutingModule,
     NgbModule,
     SocketIoModule.forRoot(config),
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [CookieService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-
-export class AppModule { 
-}
+export class AppModule {}
