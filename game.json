@@ -1,0 +1,40 @@
+[
+  {
+    "name": "kat1",
+    "fragen": [
+      {
+        "value": 100,
+        "frage": "trollolo <img class='img-fluid' src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Logo_BILD.svg/1280px-Logo_BILD.svg.png'></img>",
+        "antwort": "me",
+        "activ": true,
+        "key": 0
+      },
+      {
+        "value": 200,
+        "frage": "<div class=\"ratio ratio-16x9\">\n  <iframe src=\"https://www.youtube.com/embed/zpOULjyy-n8?rel=0\" title=\"YouTube video\" allowfullscreen></iframe>\n</div>              ",
+        "antwort": "ant2",
+        "activ": true,
+        "key": 1
+      }
+    ]
+  },
+  {
+    "name": "kat2",
+    "fragen": [
+      {
+        "value": 100,
+        "frage": "<iframe class=ratio style=\"height: 80%;\" src='https://wikipedia.com'></iframe>\n              \n              \n              ",
+        "antwort": "ant21\n            ",
+        "activ": true,
+        "key": 2
+      },
+      {
+        "value": 200,
+        "frage": "fr22",
+        "antwort": "ant22",
+        "activ": true,
+        "key": 3
+      }
+    ]
+  }
+]
