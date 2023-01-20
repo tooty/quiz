@@ -8,9 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class SocketService {
   constructor(private socket: Socket) {}
-  player_liste = new BehaviorSubject<Player[]>(
-    JSON.parse('[]')
-  );
+  player_liste = new BehaviorSubject<Player[]>([]);
 
   onHTMLEventHandler(callback: Function) {
     //subs dashboard

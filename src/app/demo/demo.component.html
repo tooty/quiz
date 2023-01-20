@@ -51,16 +51,25 @@
       id="formFile"
     />
     <li type="" class="page-item" (click)="buildGame()">
-      <a class="page-link rounded-start">buildGame</a>
+      <a class="page-link rounded-end br-3">buildGame</a>
     </li>
-    <li type="" class="page-item ">
+    <li type="" class="page-item">
+      <a class="page-link rounded-start" href="/gamemaster">GameMaster</a>
+    </li>
+    <li type="" class="page-item">
+      <a class="page-link rounded-end" href="/Dashboard">Dashboard</a>
+    </li>
+    <li type="" class="page-item rounded-start">
     <a 
-      class="page-link"
+      class="page-link text-success"
       [href]="download"
       (click)="downloader()"
       download="game.json"
       >save</a
     >
+    </li>
+    <li type="" class="page-item " (click)="resetGame()">
+    <a class="page-link text-danger">reset</a>
     </li>
   </ul>
   </nav>

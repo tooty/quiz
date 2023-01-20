@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Category, Frage } from '../game';
 
 @Component({
@@ -26,10 +26,6 @@ export class DemoComponent {
     this.currentFrage = frage;
   }
 
-  ngOnInit() {
-    localStorage.removeItem('game');
-  }
-
   onGameChange(game: Category[]) {
     this.game = game;
     localStorage.setItem('game', JSON.stringify(this.game));
@@ -40,6 +36,7 @@ export class DemoComponent {
       kat.name = value;
     }
   }
+
   downloader() {
     this.download =
       'data:text/plain;charset=utf-8,' +
@@ -71,7 +68,13 @@ export class DemoComponent {
   onFileLoaded(event: any) {
     localStorage.setItem('game', event.target.result);
   }
+
   buildGame() {
     this.game = JSON.parse(localStorage.getItem('game') || '[]');
+  }
+
+  resetGame() {
+    this.game = []
+    localStorage.removeItem('game');
   }
 }

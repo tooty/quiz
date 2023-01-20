@@ -6,6 +6,7 @@ import { Socket, Server } from 'socket.io';
 import { Category, Player } from '../../src/app/game';
 import { BehaviorSubject } from 'rxjs';
 
+const fs = require('fs')
 const pug = require('pug');
 const player_list = new BehaviorSubject<Player[]>([]);
 const game = new BehaviorSubject<Category[]>([]);
@@ -33,30 +34,30 @@ const login = (p: Player) => {
 
 module.exports = (io: Server) => {
 
-  const sharePlayer = () => {
-    var player_l = player_list.getValue();
-    player_l
-      .filter((p) => p.buzzerState == 'yellow')
-      .map((py) => {
-        if (sessions.value.find((s) => s.name == py.name) == undefined) {
-          py.buzzerState = 'none';
-        } else {
-          if (sessions.value.find((s) => s.name == py.name).connected == false) {
-            py.buzzerState = 'none';
-          }
-        }
-      });
-    console.log(player_l)
-    io.emit('sharePlayer', player_l);
-  };
-
   player_list.subscribe({
-    next: () => sharePlayer(),
+    next: (pl) => { 
+      console.log(pl)
+      io.emit('sharePlayer', pl);
+      fs.writeFileSync(__dirname+ '/../src/player.json', JSON.stringify(pl))
+    }
   });
 
   sessions.subscribe({
-    next: (n) => console.log(n),
+    next: (sess) => {
+      let pl = player_list.value
+      sess.map((ses) => {
+        let t = pl.find(p => p.name == ses.name)
+        t.connected = ses.connected
+      })
+      player_list.next(pl)
+    }
   });
+
+  game.subscribe({
+    next: (g) => {
+      fs.writeFileSync(__dirname + '/../src/game.json', JSON.stringify(g))
+    }
+  })
 
   return (socket: Socket) => {
     let session_name = socket.handshake.auth?.token ?? 'not known';
@@ -67,7 +68,6 @@ module.exports = (io: Server) => {
       sessions.next(sesss)
     }
     console.log(`Socket ${socket.id} has connected ${session_name}`);
-    sharePlayer()
 
     socket.on('pushGame', (d: Category[]) => {
       game.next(d);
@@ -158,6 +158,5 @@ module.exports = (io: Server) => {
       player.input = input
       player_list.next(pl)
     });
-
   };
 };

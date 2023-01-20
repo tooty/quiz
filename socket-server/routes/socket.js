@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var rxjs_1 = require("rxjs");
+var fs = require('fs');
 var pug = require('pug');
 var player_list = new rxjs_1.BehaviorSubject([]);
 var game = new rxjs_1.BehaviorSubject([]);
@@ -27,28 +28,27 @@ var login = function (p) {
     }
 };
 module.exports = function (io) {
-    var sharePlayer = function () {
-        var player_l = player_list.getValue();
-        player_l
-            .filter(function (p) { return p.buzzerState == 'yellow'; })
-            .map(function (py) {
-            if (sessions.value.find(function (s) { return s.name == py.name; }) == undefined) {
-                py.buzzerState = 'none';
-            }
-            else {
-                if (sessions.value.find(function (s) { return s.name == py.name; }).connected == false) {
-                    py.buzzerState = 'none';
-                }
-            }
-        });
-        console.log(player_l);
-        io.emit('sharePlayer', player_l);
-    };
     player_list.subscribe({
-        next: function () { return sharePlayer(); },
+        next: function (pl) {
+            console.log(pl);
+            io.emit('sharePlayer', pl);
+            fs.writeFileSync(__dirname + '/../src/player.json', JSON.stringify(pl));
+        }
     });
     sessions.subscribe({
-        next: function (n) { return console.log(n); },
+        next: function (sess) {
+            var pl = player_list.value;
+            sess.map(function (ses) {
+                var t = pl.find(function (p) { return p.name == ses.name; });
+                t.connected = ses.connected;
+            });
+            player_list.next(pl);
+        }
+    });
+    game.subscribe({
+        next: function (g) {
+            fs.writeFileSync(__dirname + '/../src/game.json', JSON.stringify(g));
+        }
     });
     return function (socket) {
         var _a, _b;
@@ -60,7 +60,6 @@ module.exports = function (io) {
             sessions.next(sesss);
         }
         console.log("Socket ".concat(socket.id, " has connected ").concat(session_name));
-        sharePlayer();
         socket.on('pushGame', function (d) {
             game.next(d);
         });
