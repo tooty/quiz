@@ -4,15 +4,14 @@ var express = require('express');
 var app = express();
 var http = require('http');
 var server = http.createServer(app);
-var morgan = require("morgan");
-var createProxyMiddleware = require('http-proxy-middleware').createProxyMiddleware;
+//const morgan = require("morgan");
 var socket_io_1 = require("socket.io");
-//const io = new Server(server);
 var io = new socket_io_1.Server(server, { cookie: true });
+var socketExport = require('./routes/socket')(io);
+io.on('connection', socketExport);
 //app.use(morgan('dev'));
 app.use(express.static('public'));
 app.use("*", function (req, res) { return res.sendFile(__dirname + "/public/index.html"); });
-io.sockets.on('connection', require('./routes/socket')(io));
 server.listen(80, function () {
     console.log('Listening on port 80');
 });
