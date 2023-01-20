@@ -2,7 +2,7 @@
   <div class="row" id="board">
     <div class="col text-white" *ngFor="let kat of game">
       <div class="input-group mb-3">
-        <span class="input-group-text" id="basic-addon1">Kathegorie</span>
+        <span class="input-group-text" id="basic-addon1">{{kat.name}}</span>
         <input
           (change)="changeCat(i.value, kat.name)"
           #i
@@ -40,27 +40,30 @@
   </div>
 </div>
 
-<div class="footer">
-  <div class="mb-3">
-    <label for="formFile" class="form-label">Default file input example</label>
+<div class="footer fixed-bottom ">
+    <nav class="">
+    <ul class="pagination justify-content-end mb-0">
     <input
-      class="form-control"
+      class="form-control rounded-start"
       (change)="onFileSelected($event)"
       #fileUpload
       type="file"
       id="formFile"
     />
-    <button type="submit" class="btn btn-primary mb-3" (click)="buildGame()">
-      buildGame
-    </button>
-    <a
-      class="display-6"
+    <li type="" class="page-item" (click)="buildGame()">
+      <a class="page-link rounded-start">buildGame</a>
+    </li>
+    <li type="" class="page-item ">
+    <a 
+      class="page-link"
       [href]="download"
       (click)="downloader()"
       download="game.json"
       >save</a
     >
-  </div>
+    </li>
+  </ul>
+  </nav>
 </div>
 
 <app-gm-overlay

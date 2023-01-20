@@ -7,31 +7,32 @@ import {
   ViewChild,
 } from '@angular/core';
 import { SocketService } from '../../socket.service';
-import { Kat2, Frage2, Player } from '../../game';
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Category, Frage, Player } from '../../game';
+import { NgbModalConfig, NgbModal, NgbDropdownModule} from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-gm-overlay',
   templateUrl: './gm-overlay.component.html',
   styleUrls: ['./gm-overlay.component.css'],
-  providers: [NgbModalConfig, NgbModal],
+  providers: [NgbModalConfig, NgbModal, NgbDropdownModule],
 })
 export class GmOverlayComponent implements OnChanges {
-  @Input() currentFrage: Frage2 = {
+  @Input() currentFrage: Frage = {
     key: 0,
     value: 0,
     frage: '',
     antwort: '',
     activ: true,
   };
-  @Input() game: Kat2[] = [];
+  @Input() game: Category[] = [];
   @Input() show: boolean = false;
   @Output() showOverlay = new EventEmitter<boolean>();
-  @Output() gamechange = new EventEmitter<Kat2[]>();
+  @Output() gamechange = new EventEmitter<Category[]>();
   @ViewChild('content') mycontent: any;
 
   player_liste: Player[] = [];
+
   currentAntwort: SafeHtml = '';
   currentFrage2: SafeHtml = '';
   gamemaster: boolean = false;
@@ -73,10 +74,10 @@ export class GmOverlayComponent implements OnChanges {
   }
 
   ngOnInit() {
-    this.player_liste = JSON.parse(sessionStorage.getItem('player') ?? '[]');
-    this.socketService.player_liste.subscribe((l) => {
+    this.player_liste = this.socketService.player_liste.getValue();
+    this.socketService.player_liste.subscribe({next : (l) => {
       this.player_liste = l;
-    });
+    }});
     if (window.location.href.includes('gamemaster') == true) {
       this.gamemaster = true;
     } else {
@@ -84,8 +85,9 @@ export class GmOverlayComponent implements OnChanges {
     }
   }
 
-  pushText(t: string) {
+  pushFrage2(t: string) {
     this.socketService.pushDashboard(t);
+    this.socketService.activateInput();
   }
   pushAntwort(t: string) {
     this.socketService.pushDashboard(t);
@@ -94,7 +96,7 @@ export class GmOverlayComponent implements OnChanges {
   }
 
   closeQ() {
-    this.game.map((k: Kat2) => {
+    this.game.map((k: Category) => {
       let current = k.fragen.find((f) => f.key == this.currentFrage.key);
       current = this.currentFrage;
     });
@@ -115,6 +117,9 @@ export class GmOverlayComponent implements OnChanges {
 
   checkPlayer(name: string): number {
     return this.currentFrage.player?.find((p) => p.name == name)?.sign ?? 0;
+  }
+  toggle(type: string | undefined){
+    this.currentFrage.type = type
   }
 
   changeMoney(pName: string, amount: number, sign: number) {

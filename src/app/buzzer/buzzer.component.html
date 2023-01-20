@@ -37,3 +37,19 @@
   class="btn btn-success buzzer rounded-5"
   *ngIf="me != null && me.buzzerState == 'green'"
 ></button>
+<div class="input-group mb-3" *ngIf="me.inputState == true">
+  <input
+    #input
+    (keyup.enter)="pushInput(input.value)"
+    type="text"
+    class="form-control"
+    placeholder="Input"
+  />
+  <div class="input-group-append">
+    <span
+      (click)="pushInput(input.value)"
+      class="input-group-text"
+      >send</span
+    >
+  </div>
+</div>

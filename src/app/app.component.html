@@ -3,13 +3,13 @@
     <h3 class="text-danger" *ngIf="player.buzzerState == 'red'">
       {{ player.name }}: {{ player.money }}¢
     </h3>
-    <h3 class="text-warning" *ngIf="player.buzzerState == 'yellow'">
+    <h3 class="text-warning" *ngIf="player.connected == true">
       {{ player.name }}: {{ player.money }}¢
     </h3>
     <h3 class="text-success" *ngIf="player.buzzerState == 'green'">
       {{ player.name }}: {{ player.money }}¢
     </h3>
-    <h3 class="text-white" *ngIf="player.buzzerState == 'none'">
+    <h3 class="text-white" *ngIf="player.connected == false">
       {{ player.name }}: {{ player.money }}¢
     </h3>
   </div>

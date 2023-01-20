@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { Kat2, Frage2, Kathegorie } from '../game';
+import { Category, Frage } from '../game';
 
 @Component({
   selector: 'app-demo',
@@ -7,21 +7,21 @@ import { Kat2, Frage2, Kathegorie } from '../game';
   styleUrls: ['./demo.component.css'],
 })
 export class DemoComponent {
-  game: Kat2[] = [];
+  game: Category[] = [];
   reloade: boolean = true;
-  currentFrage: Frage2 = {
+  showOverlay: boolean = false;
+  download: string = '';
+  currentFrage: Frage = {
     key: 0,
     activ: true,
     value: 0,
     antwort: '',
     frage: '',
   };
-  showOverlay: boolean = false;
-  download: string = '';
 
   @ViewChild('gm') mycontent: any;
 
-  viewOverlay(frage: Frage2) {
+  viewOverlay(frage: Frage) {
     this.showOverlay = true;
     this.currentFrage = frage;
   }
@@ -30,7 +30,7 @@ export class DemoComponent {
     localStorage.removeItem('game');
   }
 
-  onGameChange(game: Kat2[]) {
+  onGameChange(game: Category[]) {
     this.game = game;
     localStorage.setItem('game', JSON.stringify(this.game));
   }
@@ -47,11 +47,12 @@ export class DemoComponent {
   }
 
   addCategory() {
-    let prototype: Kat2 = { name: 'Neu', fragen: [] };
+    let prototype: Category = { name: 'Neu', fragen: [] };
     this.game.push(prototype);
   }
-  addQuestion(kat: Kat2) {
-    let prototype: Frage2 = {
+
+  addQuestion(kat: Category) {
+    let prototype: Frage = {
       value: 0,
       activ: true,
       antwort: '',

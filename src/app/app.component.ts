@@ -13,8 +13,8 @@ export class AppComponent {
   title = 'quiz';
   player_liste: Player[] = [];
   constructor(private socketService: SocketService) {
-    socketService.player_liste.subscribe((l) => {
-      this.player_liste = l;
+    socketService.player_liste.subscribe({
+      next: (l) => {this.player_liste = l;}
     });
   }
 

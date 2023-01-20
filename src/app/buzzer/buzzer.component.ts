@@ -8,7 +8,7 @@ import { Player } from '../game';
   styleUrls: ['./buzzer.component.css'],
 })
 export class BuzzerComponent {
-  me: Player = { name: '', money: 0, buzzerState: 'none' };
+  me: Player = { name: '', money: 0, buzzerState: 'none', inputState: false, connected: false };
 
   constructor(private socketService: SocketService) {}
 
@@ -18,15 +18,18 @@ export class BuzzerComponent {
       this.me.name = n;
       this.socketService.pushLogin(this.me);
     }
-    this.socketService.player_liste.subscribe((list) => {
+    this.socketService.player_liste.subscribe({next:(list) => {
       this.me = list.find((pl) => pl.name == this.me.name) ?? this.me;
-    });
+  }});
   }
 
   login(name: string) {
-    this.me = { name: name, money: 0, buzzerState: this.me.buzzerState };
     this.socketService.pushLogin(this.me);
     localStorage.setItem('name', name);
+  }
+
+  pushInput(input: string) {
+    this.socketService.pushInput(this.me,input)
   }
 
   pushBuzzer() {

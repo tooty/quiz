@@ -3,13 +3,13 @@ interface session {
   connected: boolean;
 }
 import { Socket, Server } from 'socket.io';
-import { Kat2, Player } from '../../src/app/game';
+import { Category, Player } from '../../src/app/game';
 import { BehaviorSubject } from 'rxjs';
 
 const pug = require('pug');
 const player_list = new BehaviorSubject<Player[]>([]);
-const game = new BehaviorSubject<Kat2[]>([]);
-let sessions: session[] = [];
+const game = new BehaviorSubject<Category[]>([]);
+const sessions = new BehaviorSubject<session[]>([]);
 
 const login = (p: Player) => {
 	if (p.name != '') {
@@ -20,9 +20,11 @@ const login = (p: Player) => {
 			next.push(p);
 			player_list.next(next);
 		}
-		let old = sessions.find((s) => s.name == p.name);
+		let old = sessions.value.find((s) => s.name == p.name);
 		if (old == undefined) {
-			sessions.push({ name: p.name, connected: true });
+      let v = sessions.value
+			v.push({ name: p.name, connected: true });
+      sessions.next (v)   
 		} else {
 			old.connected = true;
 		}
@@ -36,14 +38,15 @@ module.exports = (io: Server) => {
     player_l
       .filter((p) => p.buzzerState == 'yellow')
       .map((py) => {
-        if (sessions.find((s) => s.name == py.name) == undefined) {
+        if (sessions.value.find((s) => s.name == py.name) == undefined) {
           py.buzzerState = 'none';
         } else {
-          if (sessions.find((s) => s.name == py.name).connected == false) {
+          if (sessions.value.find((s) => s.name == py.name).connected == false) {
             py.buzzerState = 'none';
           }
         }
       });
+    console.log(player_l)
     io.emit('sharePlayer', player_l);
   };
 
@@ -51,15 +54,22 @@ module.exports = (io: Server) => {
     next: () => sharePlayer(),
   });
 
+  sessions.subscribe({
+    next: (n) => console.log(n),
+  });
+
   return (socket: Socket) => {
     let session_name = socket.handshake.auth?.token ?? 'not known';
-    let sess = sessions.find((s) => s.name == session_name);
+    let sesss = sessions.value
+    let sess = sesss.find((s) => s.name == session_name);
     if (sess != undefined) {
       sess.connected = true;
+      sessions.next(sesss)
     }
     console.log(`Socket ${socket.id} has connected ${session_name}`);
+    sharePlayer()
 
-    socket.on('pushGame', (d: Kat2[]) => {
+    socket.on('pushGame', (d: Category[]) => {
       game.next(d);
     });
 
@@ -93,9 +103,11 @@ module.exports = (io: Server) => {
     });
 
     socket.on('disconnect', () => {
-      let sess = sessions.find((s) => s.name == session_name);
+      let sesss = sessions.value
+      let sess = sesss.find((s) => s.name == session_name);
       if (sess != undefined) {
         sess.connected = false;
+        sessions.next(sesss)
       }
       console.log(`Socket ${socket.id} has disconnected`);
     });
@@ -123,5 +135,29 @@ module.exports = (io: Server) => {
       });
       player_list.next(pl);
     });
+
+    socket.on('activateInput', () => {
+      let pl = player_list.value.map((p) => {
+        p.inputState = true;
+        return p;
+      });
+      player_list.next(pl);
+    });
+
+    socket.on('stopInput', () => {
+      let pl = player_list.value.map((p) => {
+        p.inputState = false;
+        return p;
+      });
+      player_list.next(pl);
+    });
+
+    socket.on('pushInput', (player: Player, input: string) => {
+      let pl = player_list.value      
+      player = pl.find(p => player.name == p.name)
+      player.input = input
+      player_list.next(pl)
+    });
+
   };
 };

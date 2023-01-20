@@ -3,26 +3,16 @@ export interface PlayerGame {
   sign: number;
 }
 
-export interface Frage2 {
+export interface Frage {
   key: number;
   player?: PlayerGame[];
   value: number;
   frage: string;
   antwort: string;
   activ: boolean;
+  type?: string;
 }
-export interface Kat2 {
-  name: string;
-  fragen: Frage2[];
-}
-
-export interface Frage {
-  value: number;
-  question: string;
-  antwort: string;
-}
-
-export interface Kathegorie {
+export interface Category {
   name: string;
   fragen: Frage[];
 }
@@ -31,4 +21,7 @@ export interface Player {
   name: string;
   money: number;
   buzzerState: string;
+  input?: string;
+  inputState: boolean;
+  connected: boolean;
 }

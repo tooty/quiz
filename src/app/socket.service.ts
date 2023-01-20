@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { Player } from './game';
-import { Kat2 } from './game';
+import { Player, Category } from './game';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -10,7 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 export class SocketService {
   constructor(private socket: Socket) {}
   player_liste = new BehaviorSubject<Player[]>(
-    JSON.parse(localStorage.getItem('player') ?? '[]')
+    JSON.parse('[]')
   );
 
   onHTMLEventHandler(callback: Function) {
@@ -44,7 +43,7 @@ export class SocketService {
     this.socket.emit('pushBuzzer', p);
   }
 
-  pushGame(p: Kat2[]) {
+  pushGame(p: Category[]) {
     this.socket.emit('pushGame', p);
   }
   testBuzzer() {
@@ -56,5 +55,14 @@ export class SocketService {
   }
   activateBuzzer() {
     this.socket.emit('activateBuzzer');
+  }
+  activateInput() {
+    this.socket.emit('activateInput')
+  }
+  stopInput() { 
+    this.socket.emit('stopInput')
+  }
+  pushInput(p:Player, i:string) {
+    this.socket.emit('pushInput',p, i)
   }
 }

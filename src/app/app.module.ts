@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -13,7 +12,6 @@ import { GmOverlayComponent } from './gamemaster/gm-overlay/gm-overlay.component
 import { BuzzerComponent } from './buzzer/buzzer.component';
 import { CookieService } from 'ngx-cookie-service';
 import { DemoComponent } from './demo/demo.component';
-import { sanitizeHtmlPipe } from './sanitize-html.pipe';
 
 const config: SocketIoConfig = {
   options: {
@@ -26,7 +24,6 @@ const config: SocketIoConfig = {
 
 @NgModule({
   declarations: [
-    sanitizeHtmlPipe,
     AppComponent,
     GamemasterComponent,
     DashboardComponent,
@@ -39,7 +36,6 @@ const config: SocketIoConfig = {
     AppRoutingModule,
     NgbModule,
     SocketIoModule.forRoot(config),
-    HttpClientModule,
   ],
   providers: [CookieService],
   bootstrap: [AppComponent],
