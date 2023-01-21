@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { SocketService } from '../socket.service';
-import { Category, Frage } from '../game';
+import { Category, Frage, Questionnaire } from '../game';
 
 @Component({
   selector: 'app-gamemaster',
@@ -8,7 +8,8 @@ import { Category, Frage } from '../game';
   styleUrls: ['./gamemaster.component.css'],
 })
 export class GamemasterComponent {
-  game: Category[] = [];
+  game: Questionnaire[] = [];
+  currentQuestionnaire: Questionnaire = {name: "", questionnaire: []}
   currentFrage: Frage = {
     key: 0,
     activ: true,
@@ -30,7 +31,14 @@ export class GamemasterComponent {
     this.showOverlay = true;
   }
 
-  onGameChange(game: Category[]) {
+  changecurrentQuestionnaire(questionna: Questionnaire){
+    let f = this.game.find(q => q.name == this.currentQuestionnaire.name)
+    f = this.currentQuestionnaire
+    this.currentQuestionnaire = questionna
+    this.socketService.pushCurrentQuestionnaire(this.game.indexOf(this.currentQuestionnaire))
+  }
+
+  onGameChange(game: Questionnaire[]) {
     this.game = game;
     localStorage.setItem('game', JSON.stringify(this.game));
     this.socketService.pushGame(game);

@@ -7,7 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { SocketService } from '../../socket.service';
-import { Category, Frage, Player } from '../../game';
+import { Category, Frage, Player, Questionnaire } from '../../game';
 import { NgbModalConfig, NgbModal, NgbDropdownModule} from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -25,10 +25,10 @@ export class GmOverlayComponent implements OnChanges {
     antwort: '',
     activ: true,
   };
-  @Input() game: Category[] = [];
+  @Input() game: Questionnaire[] = [];
   @Input() show: boolean = false;
   @Output() showOverlay = new EventEmitter<boolean>();
-  @Output() gamechange = new EventEmitter<Category[]>();
+  @Output() gamechange = new EventEmitter<Questionnaire[]>();
   @ViewChild('content') mycontent: any;
 
   player_liste: Player[] = [];
@@ -36,6 +36,7 @@ export class GmOverlayComponent implements OnChanges {
   currentAntwort: SafeHtml = '';
   currentFrage2: SafeHtml = '';
   gamemaster: boolean = false;
+  timerInput: number = 0;
 
   constructor(
     private socketService: SocketService,
@@ -87,7 +88,15 @@ export class GmOverlayComponent implements OnChanges {
 
   pushFrage2(t: string) {
     this.socketService.pushDashboard(t);
-    this.socketService.activateInput();
+    if (this.currentFrage.type == "Input") {
+      let time = this.timerInput * 10 
+      window.setInterval(()=>{
+        time -= 1
+        if (time <= 0){
+          this.socketService.stopInput();
+        }
+      }, 100)
+    }
   }
   pushAntwort(t: string) {
     this.socketService.pushDashboard(t);
@@ -96,14 +105,10 @@ export class GmOverlayComponent implements OnChanges {
   }
 
   closeQ() {
-    this.game.map((k: Category) => {
-      let current = k.fragen.find((f) => f.key == this.currentFrage.key);
-      current = this.currentFrage;
-    });
     this.gamechange.next(this.game);
     this.showOverlay.emit(false);
-    this.modalService.dismissAll();
     this.socketService.pushDashboard(null);
+    this.modalService.dismissAll();
     this.socketService.resetBuzzer();
   }
 

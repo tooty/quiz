@@ -1,15 +1,27 @@
-<div class="container text-center">
+<div class="container-fluid text-center">
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="basic-addon1">Fragebogen:</span>
+    <input
+      (change)="currentQuestionnaire.name= i.value"
+      [value]=currentQuestionnaire.name
+      #i
+      type="text"
+      class="form-control"
+    />
+    <span class="input-group-text" id="basic-addon1" (click)="removeQustione(currentQuestionnaire)">-</span>
+  </div>
   <div class="row" id="board">
-    <div class="col text-white" *ngFor="let kat of game">
+    <div class="col text-white" *ngFor="let kat of currentQuestionnaire.questionnaire">
       <div class="input-group mb-3">
-        <span class="input-group-text" id="basic-addon1">{{kat.name}}</span>
+        <span class="input-group-text" id="basic-addon1">Kathegorie:</span>
         <input
-          (change)="changeCat(i.value, kat.name)"
-          #i
+          [value]=kat.name
+          (change)="kat.name = j.value"
+          #j
           type="text"
           class="form-control"
-          [placeholder]="kat.name"
         />
+        <span class="input-group-text" id="basic-addon1" (click)="removeCath(kat, currentQuestionnaire)">-</span>
       </div>
       <h1></h1>
       <div class="row" *ngFor="let frage of kat.fragen">
@@ -19,7 +31,9 @@
           class="btn btn-outline-primary"
           (click)="viewOverlay(frage)"
         >
-          <p class="display-1">{{ frage.value }}</p>
+          <p class="display-1">{{ frage.value }}
+          <button type="button" class="btn btn-outline-danger float-end " (click)="removeFrage(frage, kat)">-</button>
+          </p>
         </button>
       </div>
       <button
@@ -32,7 +46,7 @@
     </div>
     <button
       type="button"
-      class="btn btn-outline-danger col"
+      class="btn btn-outline-info col"
       (click)="addCategory()"
     >
       <p class="display-1">+</p>
@@ -41,7 +55,21 @@
 </div>
 
 <div class="footer fixed-bottom ">
-    <nav class="">
+<div class="row">
+    <nav b-1>
+      <ul class="pagination justify-content-start mb-0">
+      <li type="" class="page-item activ"  (click)="changecurrentQuestionnaire(questionnaire)" *ngFor="let questionnaire of game">
+          <a class="page-link active" aria-current="page" *ngIf="questionnaire == currentQuestionnaire">{{questionnaire.name}}</a>
+          <a class="page-link" *ngIf="questionnaire != currentQuestionnaire" >{{questionnaire.name}}</a>
+      </li>
+    <li type="" class="page-item" (click)="addQuestionnaire()">
+      <a class="page-link">+</a>
+    </li>
+  </ul>
+  </nav>
+</div>
+<div class="row">
+    <nav>
     <ul class="pagination justify-content-end mb-0">
     <input
       class="form-control rounded-start"
@@ -73,6 +101,7 @@
     </li>
   </ul>
   </nav>
+</div>
 </div>
 
 <app-gm-overlay

@@ -1,15 +1,15 @@
 <div class="row flex">
   <div class="col" *ngFor="let player of player_liste">
-    <h3 class="text-danger" *ngIf="player.buzzerState == 'red'">
-      {{ player.name }}: {{ player.money }}¢
-    </h3>
-    <h3 class="text-warning" *ngIf="player.connected == true">
+    <h3 class="text-warning" *ngIf="player.connected == true && (player.buzzerState == 'none'||player.buzzerState == 'yellow')">
       {{ player.name }}: {{ player.money }}¢
     </h3>
     <h3 class="text-success" *ngIf="player.buzzerState == 'green'">
       {{ player.name }}: {{ player.money }}¢
     </h3>
-    <h3 class="text-white" *ngIf="player.connected == false">
+    <h3 class="text-danger" *ngIf="player.buzzerState == 'red'">
+      {{ player.name }}: {{ player.money }}¢
+    </h3>
+    <h3 class="text-white" *ngIf="player.connected == false && player.buzzerState == 'none'">
       {{ player.name }}: {{ player.money }}¢
     </h3>
   </div>

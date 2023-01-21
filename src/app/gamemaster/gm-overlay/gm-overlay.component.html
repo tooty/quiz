@@ -47,6 +47,7 @@
     <div class="row" *ngIf="gamemaster">
 
       <div class=row *ngIf="currentFrage.type == 'Input'">
+        <input #i (change)="timerInput = i.value" type="number" placeholder="Time in seconds">
         <div class="col p-3" *ngFor="let player of player_liste">
           <h3 class="row">{{player.name}}</h3>
           <div class="row">{{player.input || player.inputState}}</div>
@@ -55,7 +56,7 @@
       <div *ngIf="currentFrage.type == 'Buzzer'" class="col text-center p-3 mb-2">
         <div class="col text-center p-3 mb-2">Buzzer</div>
         <button class="btn col btn-lg border" (click)="testBuzzer()">🐇</button>
-        <button class="col btn border" (click)="activateBuzzer()">🧨</button>{{"player_liste.find((f) => f.buzzerState == 'green').name"}}
+        <button class="col btn border" (click)="activateBuzzer()">🧨</button>
       </div>
   </div>
     </div>

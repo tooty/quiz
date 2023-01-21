@@ -3,6 +3,11 @@ export interface PlayerGame {
   sign: number;
 }
 
+export interface Questionnaire {
+  name: string,
+  questionnaire: Category[]
+}
+
 export interface Frage {
   key: number;
   player?: PlayerGame[];

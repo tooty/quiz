@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { Player, Category } from './game';
+import { Player, Category, Questionnaire } from './game';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -27,7 +27,11 @@ export class SocketService {
   }
 
   pushDashboard(t: string | null) {
-    this.socket.emit('pushHTML', t);
+    this.socket.emit('pushHTML',t);
+  }
+
+  pushCurrentQuestionnaire(i: number) {
+    this.socket.emit('pushCurrentQuestionnaire', i);
   }
 
   syncPlayerList(ps: Player[]) {
@@ -41,7 +45,7 @@ export class SocketService {
     this.socket.emit('pushBuzzer', p);
   }
 
-  pushGame(p: Category[]) {
+  pushGame(p: Questionnaire[]) {
     this.socket.emit('pushGame', p);
   }
   testBuzzer() {

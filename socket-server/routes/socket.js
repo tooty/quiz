@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var rxjs_1 = require("rxjs");
 var fs = require('fs');
 var pug = require('pug');
+var QuestionnaireIndex = new rxjs_1.BehaviorSubject(-1);
 var player_list = new rxjs_1.BehaviorSubject([]);
 var game = new rxjs_1.BehaviorSubject([]);
 var sessions = new rxjs_1.BehaviorSubject([]);
@@ -28,12 +29,34 @@ var login = function (p) {
     }
 };
 module.exports = function (io) {
+    var pushHTML = function (s) {
+        var _a, _b;
+        var content = true;
+        if (s == null) {
+            if (QuestionnaireIndex.value == -1) {
+                var overview_pug = __dirname + '/../src/overview.pug';
+                content = false;
+                s = pug.renderFile(overview_pug, { game: game.value });
+            }
+            else {
+                content = false;
+                var dashboard_pug = __dirname + '/../src/dashboard.pug';
+                var v = (_b = (_a = game.value[QuestionnaireIndex.value]) === null || _a === void 0 ? void 0 : _a.questionnaire) !== null && _b !== void 0 ? _b : [];
+                s = pug.renderFile(dashboard_pug, { fragen: v });
+            }
+        }
+        io.emit('dashHTML', { content: content, data: s });
+        console.log(QuestionnaireIndex.value);
+    };
     player_list.subscribe({
         next: function (pl) {
             console.log(pl);
             io.emit('sharePlayer', pl);
             fs.writeFileSync(__dirname + '/../src/player.json', JSON.stringify(pl));
         }
+    });
+    QuestionnaireIndex.subscribe({
+        next: function () { return pushHTML(null); }
     });
     sessions.subscribe({
         next: function (sess) {
@@ -63,14 +86,12 @@ module.exports = function (io) {
         socket.on('pushGame', function (d) {
             game.next(d);
         });
+        socket.on('pushCurrentQuestionnaire', function (i) {
+            console.log("sie drht sich doch");
+            QuestionnaireIndex.next(i);
+        });
         socket.on('pushHTML', function (d) {
-            var content = true;
-            if (d == null) {
-                content = false;
-                var dashboard_pug = __dirname + '/../src/dashboard.pug';
-                d = pug.renderFile(dashboard_pug, { fragen: game.value });
-            }
-            io.emit('dashHTML', { content: content, data: d });
+            pushHTML(d);
         });
         socket.on('pushLogin', function (p) {
             login(p);

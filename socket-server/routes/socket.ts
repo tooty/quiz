@@ -3,13 +3,14 @@ interface session {
   connected: boolean;
 }
 import { Socket, Server } from 'socket.io';
-import { Category, Player } from '../../src/app/game';
+import { Category, Player, Questionnaire } from '../../src/app/game';
 import { BehaviorSubject } from 'rxjs';
 
 const fs = require('fs')
 const pug = require('pug');
+const QuestionnaireIndex = new BehaviorSubject<number>(-1);
 const player_list = new BehaviorSubject<Player[]>([]);
-const game = new BehaviorSubject<Category[]>([]);
+const game = new BehaviorSubject<Questionnaire[]>([]);
 const sessions = new BehaviorSubject<session[]>([]);
 
 const login = (p: Player) => {
@@ -32,7 +33,26 @@ const login = (p: Player) => {
 	}
 };
 
+
 module.exports = (io: Server) => {
+
+  const pushHTML = (s:string|null) => {
+    let content = true;
+    if (s == null) {
+      if (QuestionnaireIndex.value == -1) {
+        let overview_pug = __dirname + '/../src/overview.pug';
+        content = false;
+        s = pug.renderFile(overview_pug, { game: game.value });
+      } else {
+          content = false;
+          let dashboard_pug = __dirname + '/../src/dashboard.pug';
+          let v: Category[] = game.value[QuestionnaireIndex.value]?.questionnaire ?? [] 
+          s = pug.renderFile(dashboard_pug, { fragen: v });
+      }
+    }
+    io.emit('dashHTML', { content: content, data: s });
+    console.log(QuestionnaireIndex.value)
+  }
 
   player_list.subscribe({
     next: (pl) => { 
@@ -41,6 +61,10 @@ module.exports = (io: Server) => {
       fs.writeFileSync(__dirname+ '/../src/player.json', JSON.stringify(pl))
     }
   });
+
+  QuestionnaireIndex.subscribe({
+    next: () => pushHTML(null) 
+  })
 
   sessions.subscribe({
     next: (sess) => {
@@ -69,18 +93,17 @@ module.exports = (io: Server) => {
     }
     console.log(`Socket ${socket.id} has connected ${session_name}`);
 
-    socket.on('pushGame', (d: Category[]) => {
+    socket.on('pushGame', (d: Questionnaire[]) => {
       game.next(d);
     });
 
+    socket.on('pushCurrentQuestionnaire', (i:number) => {
+      console.log("sie drht sich doch")
+      QuestionnaireIndex.next(i)
+    })
+
     socket.on('pushHTML', (d: string | null) => {
-      let content = true;
-      if (d == null) {
-        content = false;
-        let dashboard_pug = __dirname + '/../src/dashboard.pug';
-        d = pug.renderFile(dashboard_pug, { fragen: game.value });
-      }       
-			io.emit('dashHTML', { content: content, data: d });
+      pushHTML(d)
     });
 
     socket.on('pushLogin', (p: Player) => {
