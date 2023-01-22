@@ -1,7 +1,6 @@
-import { Component, Sanitizer } from '@angular/core';
+import { Component } from '@angular/core';
 import { SocketService } from '../socket.service';
 import { ViewEncapsulation } from '@angular/core';
-import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({

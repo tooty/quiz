@@ -54,11 +54,13 @@ export class GmOverlayComponent implements OnChanges {
   }
 
   antwortInput(value: string) {
+    value = value.replace(/\s/g, "")
     this.currentAntwort = this.sanitizer.bypassSecurityTrustHtml(value);
     this.currentFrage.antwort = value;
     localStorage.setItem('current', value);
   }
   frageInput(value: string) {
+    value = value.replace(/\s/g, "")
     this.currentFrage2 = this.sanitizer.bypassSecurityTrustHtml(value);
     this.currentFrage.frage = value;
     localStorage.setItem('current', value);
