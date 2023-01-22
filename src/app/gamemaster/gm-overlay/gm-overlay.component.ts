@@ -3,17 +3,17 @@ import {
   Input,
   Output,
   EventEmitter,
-  OnChanges,
   ViewChild,
 } from '@angular/core';
-import { SocketService } from '../../socket.service';
-import { Frage, Player, Questionnaire } from '../../game';
 import {
   NgbModalConfig,
   NgbModal,
   NgbDropdownModule,
 } from '@ng-bootstrap/ng-bootstrap';
+import { SocketService } from '../../socket.service';
+import { Frage, Player, Questionnaire } from '../../game';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-gm-overlay',
@@ -21,14 +21,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrls: ['./gm-overlay.component.css'],
   providers: [NgbModalConfig, NgbModal, NgbDropdownModule],
 })
-export class GmOverlayComponent implements OnChanges {
-  @Input() currentFrage: Frage = {
-    key: 0,
-    value: 0,
-    frage: '',
-    antwort: '',
-    activ: true,
-  };
+
+export class GmOverlayComponent {
+  @Input() currentFrage: Frage | null = null;
   @Input() game: Questionnaire[] = [];
   @Input() show: boolean = false;
   @Output() showOverlay = new EventEmitter<boolean>();
@@ -36,7 +31,6 @@ export class GmOverlayComponent implements OnChanges {
   @ViewChild('content') mycontent: any;
 
   player_liste: Player[] = [];
-
   currentAntwort: SafeHtml = '';
   currentFrage2: SafeHtml = '';
   gamemaster: boolean = false;
@@ -56,17 +50,23 @@ export class GmOverlayComponent implements OnChanges {
   antwortInput(value: string) {
     value = value.replace(/\s/g, "")
     this.currentAntwort = this.sanitizer.bypassSecurityTrustHtml(value);
-    this.currentFrage.antwort = value;
+    if (this.currentFrage|| false){
+      this.currentFrage.antwort = value;
+    } else {throwError}
     localStorage.setItem('current', value);
   }
   frageInput(value: string) {
     value = value.replace(/\s/g, "")
     this.currentFrage2 = this.sanitizer.bypassSecurityTrustHtml(value);
-    this.currentFrage.frage = value;
+    if (this.currentFrage|| false){
+      this.currentFrage.frage = value;
+    } else {throwError}
     localStorage.setItem('current', value);
   }
   valueInput(value: string) {
-    this.currentFrage.value = Number(value);
+    if (this.currentFrage|| false){
+      this.currentFrage.value = Number(value);
+    } else {throwError}
   }
 
   ngOnChanges() {
@@ -74,10 +74,10 @@ export class GmOverlayComponent implements OnChanges {
       this.modalService.open(this.mycontent, { size: 'xl' });
     }
     this.currentAntwort = this.sanitizer.bypassSecurityTrustHtml(
-      this.currentFrage.antwort
+      this.currentFrage?.antwort ?? ""
     );
     this.currentFrage2 = this.sanitizer.bypassSecurityTrustHtml(
-      this.currentFrage.frage
+      this.currentFrage?.frage ?? ""
     );
   }
 
@@ -96,26 +96,30 @@ export class GmOverlayComponent implements OnChanges {
   }
 
   pushFrage2(t: string) {
-    if (this.currentFrage.type == 'Input') {
-      let timeInput: any = document.getElementById('rangeInput');
-      let time = timeInput.value;
-      this.socketService.activateInput();
-      this.socketService.pushTimer(time);
-      let time_0 = time;
-      let myInt = window.setInterval(() => {
-        time -= 1;
-        timeInput.value = time.toString();
-        if (time <= 0) {
-          this.socketService.stopInput();
-          clearInterval(myInt);
-        }
-      }, 1000);
-    }
+    if (this.currentFrage || false){
+      if (this.currentFrage.type == 'Input') {
+        let timeInput: any = document.getElementById('rangeInput');
+        let time = timeInput.value;
+        this.socketService.activateInput();
+        this.socketService.pushTimer(time);
+        let time_0 = time;
+        let myInt = window.setInterval(() => {
+          time -= 1;
+          timeInput.value = time.toString();
+          if (time <= 0) {
+            this.socketService.stopInput();
+            clearInterval(myInt);
+          }
+        }, 1000);
+      }
+    }else{throwError}
     this.socketService.pushDashboard(t);
   }
   pushAntwort(t: string) {
     this.socketService.pushDashboard(t);
-    this.currentFrage.activ = false;
+    if (this.currentFrage || false) {
+      this.currentFrage.activ = false;
+    } else{throwError}
     localStorage.setItem('game', JSON.stringify(this.game));
   }
 
@@ -138,27 +142,34 @@ export class GmOverlayComponent implements OnChanges {
     this.buzzerActiv = true;
   }
 
-  checkPlayer(name: string): number {
-    return this.currentFrage.player?.find((p) => p.name == name)?.sign ?? 0;
+  didPlayergiveAnswer(name: string): number {
+    return this.currentFrage?.player?.find((p) => p.name == name)?.sign ?? 0;
   }
   toggle(type: string | undefined) {
-    this.currentFrage.type = type;
+    if (this.currentFrage || false){
+     this.currentFrage.type = type;
+    } else {throwError}
   }
 
   changeMoney(pName: string, amount: number, sign: number) {
+    //add money to game
     let before =
-      this.currentFrage.player?.find((p) => p.name == pName)?.sign ?? 0;
+      this.currentFrage?.player?.find((p) => p.name == pName)?.sign ?? 0;
 
+    //reset case
     if (before != 0) {
-      //reset case
       sign = before * -1;
-      this.currentFrage.player = this.currentFrage.player?.filter(
-        (p) => p.name != pName
-      );
+      if (this.currentFrage || false){
+        this.currentFrage.player = this.currentFrage?.player?.filter(
+          (p) => p.name != pName
+        );
+      }
     } else {
-      this.currentFrage.player = [{ name: pName, sign: sign }].concat(
-        this.currentFrage.player ?? []
-      );
+      if (this.currentFrage || false){
+        this.currentFrage.player = [{ name: pName, sign: sign }].concat(
+          this.currentFrage?.player ?? []
+        );
+      } else {throwError}
     }
 
     //change player_list money

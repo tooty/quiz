@@ -1,7 +1,7 @@
 <ng-template #content contentlet-c="close" let-d="dismiss">
   <div class="modal-header text-center">
     <h4 class="modal-title justify-content-center" *ngIf="gamemaster">
-      {{ currentFrage.value }}
+      {{ currentFrage?.value }}
     </h4>
     <div class="input-group mb-3" *ngIf="!gamemaster">
       <span class="input-group-text" id="basic-addon1">¢</span>
@@ -10,7 +10,7 @@
         (change)="valueInput(valueInputid.value)"
         #valueInputid
         class="form-control"
-        [placeholder]="currentFrage.value"
+        [placeholder]="currentFrage?.value"
       />
     </div>
     <button
@@ -38,14 +38,14 @@
     </div>
     <div class="flex-nowrap p-0" *ngIf="gamemaster">
       <button
-        (click)="pushFrage2(currentFrage.frage)"
+        (click)="pushFrage2(currentFrage?.frage ?? '')"
         type="button"
         class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-end"
       >
         Share Frage
       </button>
       <button
-        (click)="pushAntwort(currentFrage.antwort)"
+        (click)="pushAntwort(currentFrage?.antwort ?? '')"
         type="button"
         class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 horder-end"
       >
@@ -53,7 +53,7 @@
       </button>
     </div>
     <div class="row" *ngIf="gamemaster">
-      <div class="row border-top" *ngIf="currentFrage.type == 'Input'">
+      <div class="row border-top" *ngIf="currentFrage?.type == 'Input'">
         <div class="col p-3" *ngFor="let player of player_liste">
           <h3 class="row">{{ player.name }}</h3>
           <div class="row">{{ player.input || player.inputState }}</div>
@@ -61,7 +61,7 @@
         <input #rangeInput id="rangeInput" type="range" />
         <p>Input Timer: {{ rangeInput.value }}s</p>
       </div>
-      <div *ngIf="currentFrage.type == 'Buzzer'" class="text-center">
+      <div *ngIf="currentFrage?.type == 'Buzzer'" class="text-center">
         <button
           *ngIf="!buzzerActiv"
           class="col btn border w-100"
@@ -85,27 +85,27 @@
         <div class="row text-center">{{ player.name }}</div>
         <div class="row">
           <button
-            *ngIf="checkPlayer(player.name) == 0"
+            *ngIf="didPlayergiveAnswer(player.name) == 0"
             class="btn border"
-            (click)="changeMoney(player.name, currentFrage.value, 1)"
+            (click)="changeMoney(player.name, currentFrage?.value ?? 0, 1)"
           >
             ✅
           </button>
         </div>
         <div class="row">
           <button
-            *ngIf="checkPlayer(player.name) == 0"
+            *ngIf="didPlayergiveAnswer(player.name) == 0"
             class="btn border"
-            (click)="changeMoney(player.name, currentFrage.value, -1)"
+            (click)="changeMoney(player.name, currentFrage?.value ?? 0, -1)"
           >
             ❌
           </button>
         </div>
         <div class="row">
           <button
-            *ngIf="checkPlayer(player.name) != 0"
+            *ngIf="didPlayergiveAnswer(player.name) != 0"
             class="btn border"
-            (click)="changeMoney(player.name, currentFrage.value, 1)"
+            (click)="changeMoney(player.name, currentFrage?.value ?? 0, 1)"
           >
             ♻️
           </button>
@@ -120,7 +120,7 @@
           type="text"
           class="align-left form-control"
         >
-            {{ currentFrage.frage }}
+            {{ currentFrage?.frage }}
               </textarea
         >
       </div>
@@ -131,7 +131,7 @@
           type="text"
           class="align-left form-control"
         >
-            {{ currentFrage.antwort }}
+            {{ currentFrage?.antwort }}
             </textarea
         >
       </div>
@@ -143,7 +143,7 @@
               class="btn btn-outline-primary btn-sm"
               ngbDropdownToggle
             >
-              {{ currentFrage.type ?? "Type" }}
+              {{ currentFrage?.type ?? "Type" }}
             </button>
             <div ngbDropdownMenu>
               <button ngbDropdownItem (click)="toggle('Buzzer')">Buzzer</button>

@@ -21,6 +21,7 @@ export class BuzzerComponent {
   ngOnInit() {
     let n = localStorage.getItem('name');
     if (n != null) {
+      if (this.me)
       this.me.name = n;
       this.socketService.pushLogin(this.me);
     }

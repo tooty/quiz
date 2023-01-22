@@ -11,7 +11,7 @@ var socketExport = require('./routes/socket')(io);
 io.on('connection', socketExport);
 //app.use(morgan('dev'));
 app.use(express.static('public'));
-app.use("*", function (req, res) { return res.sendFile(__dirname + "/public/index.html"); });
+app.use('*', function (req, res) { return res.sendFile(__dirname + '/public/index.html'); });
 server.listen(80, function () {
     console.log('Listening on port 80');
 });

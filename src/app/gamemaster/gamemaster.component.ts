@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { SocketService } from '../socket.service';
-import { Category, Frage, Questionnaire } from '../game';
+import { Frage, Questionnaire } from '../game';
 
 @Component({
   selector: 'app-gamemaster',
@@ -10,13 +10,7 @@ import { Category, Frage, Questionnaire } from '../game';
 export class GamemasterComponent {
   game: Questionnaire[] = [];
   currentQuestionnaire: Questionnaire = { name: '', questionnaire: [] };
-  currentFrage: Frage = {
-    key: 0,
-    activ: true,
-    value: 0,
-    antwort: '',
-    frage: '',
-  };
+  currentFrage: Frage | null = null 
   showOverlay: boolean = false;
 
   constructor(private socketService: SocketService) {}
