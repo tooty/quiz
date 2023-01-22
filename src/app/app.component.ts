@@ -14,7 +14,9 @@ export class AppComponent {
   player_liste: Player[] = [];
   constructor(private socketService: SocketService) {
     socketService.player_liste.subscribe({
-      next: (l) => {this.player_liste = l;}
+      next: (l) => {
+        this.player_liste = l;
+      },
     });
   }
 

@@ -7,8 +7,12 @@ import {
   ViewChild,
 } from '@angular/core';
 import { SocketService } from '../../socket.service';
-import { Category, Frage, Player, Questionnaire } from '../../game';
-import { NgbModalConfig, NgbModal, NgbDropdownModule} from '@ng-bootstrap/ng-bootstrap';
+import { Frage, Player, Questionnaire } from '../../game';
+import {
+  NgbModalConfig,
+  NgbModal,
+  NgbDropdownModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
@@ -37,6 +41,7 @@ export class GmOverlayComponent implements OnChanges {
   currentFrage2: SafeHtml = '';
   gamemaster: boolean = false;
   timerInput: number = 0;
+  buzzerActiv: boolean = false;
 
   constructor(
     private socketService: SocketService,
@@ -76,9 +81,11 @@ export class GmOverlayComponent implements OnChanges {
 
   ngOnInit() {
     this.player_liste = this.socketService.player_liste.getValue();
-    this.socketService.player_liste.subscribe({next : (l) => {
-      this.player_liste = l;
-    }});
+    this.socketService.player_liste.subscribe({
+      next: (l) => {
+        this.player_liste = l;
+      },
+    });
     if (window.location.href.includes('gamemaster') == true) {
       this.gamemaster = true;
     } else {
@@ -87,16 +94,22 @@ export class GmOverlayComponent implements OnChanges {
   }
 
   pushFrage2(t: string) {
-    this.socketService.pushDashboard(t);
-    if (this.currentFrage.type == "Input") {
-      let time = this.timerInput * 10 
-      window.setInterval(()=>{
-        time -= 1
-        if (time <= 0){
+    if (this.currentFrage.type == 'Input') {
+      let timeInput: any = document.getElementById('rangeInput');
+      let time = timeInput.value;
+      this.socketService.activateInput();
+      this.socketService.pushTimer(time);
+      let time_0 = time;
+      let myInt = window.setInterval(() => {
+        time -= 1;
+        timeInput.value = time.toString();
+        if (time <= 0) {
           this.socketService.stopInput();
+          clearInterval(myInt);
         }
-      }, 100)
+      }, 1000);
     }
+    this.socketService.pushDashboard(t);
   }
   pushAntwort(t: string) {
     this.socketService.pushDashboard(t);
@@ -105,6 +118,7 @@ export class GmOverlayComponent implements OnChanges {
   }
 
   closeQ() {
+    this.buzzerActiv = false;
     this.gamechange.next(this.game);
     this.showOverlay.emit(false);
     this.socketService.pushDashboard(null);
@@ -114,17 +128,19 @@ export class GmOverlayComponent implements OnChanges {
 
   testBuzzer() {
     this.socketService.testBuzzer();
+    this.buzzerActiv = false;
   }
 
   activateBuzzer() {
     this.socketService.activateBuzzer();
+    this.buzzerActiv = true;
   }
 
   checkPlayer(name: string): number {
     return this.currentFrage.player?.find((p) => p.name == name)?.sign ?? 0;
   }
-  toggle(type: string | undefined){
-    this.currentFrage.type = type
+  toggle(type: string | undefined) {
+    this.currentFrage.type = type;
   }
 
   changeMoney(pName: string, amount: number, sign: number) {

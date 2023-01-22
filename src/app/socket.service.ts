@@ -10,6 +10,11 @@ export class SocketService {
   constructor(private socket: Socket) {}
   player_liste = new BehaviorSubject<Player[]>([]);
 
+  onTimer(callback: Function) {
+    this.socket.on('setTimer', (t: number) => {
+      callback(t);
+    });
+  }
   onHTMLEventHandler(callback: Function) {
     //subs dashboard
     return this.socket.on(
@@ -27,7 +32,7 @@ export class SocketService {
   }
 
   pushDashboard(t: string | null) {
-    this.socket.emit('pushHTML',t);
+    this.socket.emit('pushHTML', t);
   }
 
   pushCurrentQuestionnaire(i: number) {
@@ -59,12 +64,15 @@ export class SocketService {
     this.socket.emit('activateBuzzer');
   }
   activateInput() {
-    this.socket.emit('activateInput')
+    this.socket.emit('activateInput');
   }
-  stopInput() { 
-    this.socket.emit('stopInput')
+  stopInput() {
+    this.socket.emit('stopInput');
   }
-  pushInput(p:Player, i:string) {
-    this.socket.emit('pushInput',p, i)
+  pushInput(p: Player, i: string) {
+    this.socket.emit('pushInput', p, i);
+  }
+  pushTimer(t: number) {
+    this.socket.emit('pushTimer', t);
   }
 }

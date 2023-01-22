@@ -1,6 +1,9 @@
 <div class="container text-center">
   <div class="row" id="board">
-    <div class="col text-white" *ngFor="let kat of currentQuestionnaire.questionnaire">
+    <div
+      class="col text-white"
+      *ngFor="let kat of currentQuestionnaire.questionnaire"
+    >
       <h1>{{ kat.name }}</h1>
       <div class="row" *ngFor="let frage of kat.fragen">
         <button
@@ -24,17 +27,34 @@
   </div>
 </div>
 
-<div class="footer fixed-bottom ">
-<div class="row">
+<div class="footer fixed-bottom">
+  <div class="row">
     <nav b-1>
       <ul class="pagination justify-content-start mb-0">
-      <li type="" class="page-item activ"  (click)="changecurrentQuestionnaire(questionnaire)" *ngFor="let questionnaire of game">
-          <a class="page-link active" aria-current="page" *ngIf="questionnaire == currentQuestionnaire">{{questionnaire.name}}</a>
-          <a class="page-link" *ngIf="questionnaire != currentQuestionnaire" >{{questionnaire.name}}</a>
-      </li>
-  </ul>
-  </nav>
-</div>
+        <li
+          type=""
+          class="page-item activ"
+          (click)="changecurrentQuestionnaire(questionnaire)"
+          *ngFor="let questionnaire of game"
+        >
+          <a
+            class="page-link active"
+            aria-current="page"
+            *ngIf="questionnaire == currentQuestionnaire"
+            >{{ questionnaire.name }}</a
+          >
+          <a class="page-link" *ngIf="questionnaire != currentQuestionnaire">{{
+            questionnaire.name
+          }}</a>
+        </li>
+        <li class="page-item activ">
+          <a class="page-link active" aria-current="page" (click)="clickHome()"
+            >🏠</a
+          >
+        </li>
+      </ul>
+    </nav>
+  </div>
 </div>
 
 <app-gm-overlay

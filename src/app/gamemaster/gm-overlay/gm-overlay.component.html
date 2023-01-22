@@ -1,6 +1,8 @@
 <ng-template #content contentlet-c="close" let-d="dismiss">
   <div class="modal-header text-center">
-    <h4 class="modal-title justify-content-center" *ngIf="gamemaster">{{ currentFrage.value }}</h4>
+    <h4 class="modal-title justify-content-center" *ngIf="gamemaster">
+      {{ currentFrage.value }}
+    </h4>
     <div class="input-group mb-3" *ngIf="!gamemaster">
       <span class="input-group-text" id="basic-addon1">¢</span>
       <input
@@ -25,8 +27,14 @@
       <h3 class="col">Antwort:</h3>
     </div>
     <div class="row">
-      <div class="col d-flex justify-content-center align-items-center display-6" [innerHTML]="currentFrage2"></div>
-      <div class="col d-flex justify-content-center align-items-center display-6" [innerHTML]="currentAntwort"></div>
+      <div
+        class="col d-flex justify-content-center align-items-center display-6"
+        [innerHTML]="currentFrage2"
+      ></div>
+      <div
+        class="col d-flex justify-content-center align-items-center display-6"
+        [innerHTML]="currentAntwort"
+      ></div>
     </div>
     <div class="flex-nowrap p-0" *ngIf="gamemaster">
       <button
@@ -45,23 +53,34 @@
       </button>
     </div>
     <div class="row" *ngIf="gamemaster">
-
-      <div class=row *ngIf="currentFrage.type == 'Input'">
-        <input #i (change)="timerInput = i.value" type="number" placeholder="Time in seconds">
+      <div class="row border-top" *ngIf="currentFrage.type == 'Input'">
         <div class="col p-3" *ngFor="let player of player_liste">
-          <h3 class="row">{{player.name}}</h3>
-          <div class="row">{{player.input || player.inputState}}</div>
+          <h3 class="row">{{ player.name }}</h3>
+          <div class="row">{{ player.input || player.inputState }}</div>
         </div>
+        <input #rangeInput id="rangeInput" type="range" />
+        <p>Input Timer: {{ rangeInput.value }}s</p>
       </div>
-      <div *ngIf="currentFrage.type == 'Buzzer'" class="col text-center p-3 mb-2">
-        <div class="col text-center p-3 mb-2">Buzzer</div>
-        <button class="btn col btn-lg border" (click)="testBuzzer()">🐇</button>
-        <button class="col btn border" (click)="activateBuzzer()">🧨</button>
+      <div *ngIf="currentFrage.type == 'Buzzer'" class="text-center">
+        <button
+          *ngIf="!buzzerActiv"
+          class="col btn border w-100"
+          (click)="activateBuzzer()"
+        >
+          🧨
+        </button>
+        <button
+          *ngIf="buzzerActiv"
+          class="col btn border w-100"
+          (click)="testBuzzer()"
+        >
+          ♻️
+        </button>
       </div>
-  </div>
     </div>
+  </div>
   <div class="modal-footer">
-   <div class="row"> 
+    <div class="row">
       <div class="col" *ngFor="let player of player_liste">
         <div class="row text-center">{{ player.name }}</div>
         <div class="row">
@@ -117,17 +136,23 @@
         >
       </div>
       <div class="d-flex flex-row-reverse">
-      <td class="overflow-hidden ">
-				<div ngbDropdown container="body">
-					<button type="button" class="btn btn-outline-primary btn-sm" ngbDropdownToggle>{{currentFrage.type ?? 'Type'}}</button>
-					<div ngbDropdownMenu>
-						<button ngbDropdownItem (click)="toggle('Buzzer')">Buzzer</button>
-						<button ngbDropdownItem (click)="toggle('Input')">Input</button>
-						<div class="dropdown-divider"></div>
-						<button ngbDropdownItem (click)="toggle(undefined)">None</button>
-					</div>
-				</div>
-			</td>
+        <td class="overflow-hidden">
+          <div ngbDropdown container="body">
+            <button
+              type="button"
+              class="btn btn-outline-primary btn-sm"
+              ngbDropdownToggle
+            >
+              {{ currentFrage.type ?? "Type" }}
+            </button>
+            <div ngbDropdownMenu>
+              <button ngbDropdownItem (click)="toggle('Buzzer')">Buzzer</button>
+              <button ngbDropdownItem (click)="toggle('Input')">Input</button>
+              <div class="dropdown-divider"></div>
+              <button ngbDropdownItem (click)="toggle(undefined)">None</button>
+            </div>
+          </div>
+        </td>
       </div>
     </div>
   </div>

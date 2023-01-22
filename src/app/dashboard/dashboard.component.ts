@@ -17,12 +17,15 @@ export class DashboardComponent {
   ) {}
   canvasHTML: SafeHtml = '';
   dashboardHTML: string = '';
+  progress: number = 0;
 
   ngOnInit() {
     if (window.location.href.includes('github') == true) {
-      this.canvasHTML = this.sanitizer.bypassSecurityTrustHtml(
-        localStorage.getItem('current') ?? ''
-      );
+      let w = window.setInterval(() => {
+        this.canvasHTML = this.sanitizer.bypassSecurityTrustHtml(
+          localStorage.getItem('current') ?? ''
+        );
+      }, 3000);
     }
     this.socketService.onHTMLEventHandler(
       (d: { content: boolean; data: string }) => {
@@ -35,6 +38,17 @@ export class DashboardComponent {
         }
       }
     );
+    this.socketService.onTimer((t: number) => {
+      let time_0 = t;
+      let time = time_0;
+      let timer = window.setInterval(() => {
+        time -= 1;
+        this.progress = (100 / time_0) * time;
+        if (time == 0) {
+          clearInterval(timer);
+        }
+      }, 1000);
+    });
     this.socketService.pushDashboard(null);
   }
 }

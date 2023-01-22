@@ -9,7 +9,7 @@ import { Category, Frage, Questionnaire } from '../game';
 })
 export class GamemasterComponent {
   game: Questionnaire[] = [];
-  currentQuestionnaire: Questionnaire = {name: "", questionnaire: []}
+  currentQuestionnaire: Questionnaire = { name: '', questionnaire: [] };
   currentFrage: Frage = {
     key: 0,
     activ: true,
@@ -31,16 +31,23 @@ export class GamemasterComponent {
     this.showOverlay = true;
   }
 
-  changecurrentQuestionnaire(questionna: Questionnaire){
-    let f = this.game.find(q => q.name == this.currentQuestionnaire.name)
-    f = this.currentQuestionnaire
-    this.currentQuestionnaire = questionna
-    this.socketService.pushCurrentQuestionnaire(this.game.indexOf(this.currentQuestionnaire))
+  changecurrentQuestionnaire(questionna: Questionnaire) {
+    let f = this.game.find((q) => q.name == this.currentQuestionnaire.name);
+    f = this.currentQuestionnaire;
+    this.currentQuestionnaire = questionna;
+    this.socketService.pushCurrentQuestionnaire(
+      this.game.indexOf(this.currentQuestionnaire)
+    );
   }
 
   onGameChange(game: Questionnaire[]) {
     this.game = game;
     localStorage.setItem('game', JSON.stringify(this.game));
     this.socketService.pushGame(game);
+  }
+
+  clickHome() {
+    this.socketService.pushCurrentQuestionnaire(-1);
+    this.currentQuestionnaire = { name: '', questionnaire: [] };
   }
 }

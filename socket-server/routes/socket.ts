@@ -6,7 +6,7 @@ import { Socket, Server } from 'socket.io';
 import { Category, Player, Questionnaire } from '../../src/app/game';
 import { BehaviorSubject } from 'rxjs';
 
-const fs = require('fs')
+const fs = require('fs');
 const pug = require('pug');
 const QuestionnaireIndex = new BehaviorSubject<number>(-1);
 const player_list = new BehaviorSubject<Player[]>([]);
@@ -14,29 +14,27 @@ const game = new BehaviorSubject<Questionnaire[]>([]);
 const sessions = new BehaviorSubject<session[]>([]);
 
 const login = (p: Player) => {
-	if (p.name != '') {
-		let neu: boolean = player_list.value.find((player) => 
-			player.name == p.name) == undefined;
-		if (neu) {
-			let next: Player[] = player_list.getValue();
-			next.push(p);
-			player_list.next(next);
-		}
-		let old = sessions.value.find((s) => s.name == p.name);
-		if (old == undefined) {
-      let v = sessions.value
-			v.push({ name: p.name, connected: true });
-      sessions.next (v)   
-		} else {
-			old.connected = true;
-		}
-	}
+  if (p.name != '') {
+    let neu: boolean =
+      player_list.value.find((player) => player.name == p.name) == undefined;
+    if (neu) {
+      let next: Player[] = player_list.getValue();
+      next.push(p);
+      player_list.next(next);
+    }
+    let old = sessions.value.find((s) => s.name == p.name);
+    if (old == undefined) {
+      let v = sessions.value;
+      v.push({ name: p.name, connected: true });
+      sessions.next(v);
+    } else {
+      old.connected = true;
+    }
+  }
 };
 
-
 module.exports = (io: Server) => {
-
-  const pushHTML = (s:string|null) => {
+  const pushHTML = (s: string | null) => {
     let content = true;
     if (s == null) {
       if (QuestionnaireIndex.value == -1) {
@@ -44,52 +42,53 @@ module.exports = (io: Server) => {
         content = false;
         s = pug.renderFile(overview_pug, { game: game.value });
       } else {
-          content = false;
-          let dashboard_pug = __dirname + '/../src/dashboard.pug';
-          let v: Category[] = game.value[QuestionnaireIndex.value]?.questionnaire ?? [] 
-          s = pug.renderFile(dashboard_pug, { fragen: v });
+        content = false;
+        let dashboard_pug = __dirname + '/../src/dashboard.pug';
+        let v: Category[] =
+          game.value[QuestionnaireIndex.value]?.questionnaire ?? [];
+        s = pug.renderFile(dashboard_pug, { fragen: v });
       }
     }
     io.emit('dashHTML', { content: content, data: s });
-    console.log(QuestionnaireIndex.value)
-  }
+    console.log(QuestionnaireIndex.value);
+  };
 
   player_list.subscribe({
-    next: (pl) => { 
-      console.log(pl)
+    next: (pl) => {
+      console.log(pl);
       io.emit('sharePlayer', pl);
-      fs.writeFileSync(__dirname+ '/../src/player.json', JSON.stringify(pl))
-    }
+      fs.writeFileSync(__dirname + '/../src/player.json', JSON.stringify(pl));
+    },
   });
 
   QuestionnaireIndex.subscribe({
-    next: () => pushHTML(null) 
-  })
+    next: () => pushHTML(null),
+  });
 
   sessions.subscribe({
     next: (sess) => {
-      let pl = player_list.value
+      let pl = player_list.value;
       sess.map((ses) => {
-        let t = pl.find(p => p.name == ses.name)
-        t.connected = ses.connected
-      })
-      player_list.next(pl)
-    }
+        let t = pl.find((p) => p.name == ses.name);
+        t.connected = ses.connected;
+      });
+      player_list.next(pl);
+    },
   });
 
   game.subscribe({
     next: (g) => {
-      fs.writeFileSync(__dirname + '/../src/game.json', JSON.stringify(g))
-    }
-  })
+      fs.writeFileSync(__dirname + '/../src/game.json', JSON.stringify(g));
+    },
+  });
 
   return (socket: Socket) => {
     let session_name = socket.handshake.auth?.token ?? 'not known';
-    let sesss = sessions.value
+    let sesss = sessions.value;
     let sess = sesss.find((s) => s.name == session_name);
     if (sess != undefined) {
       sess.connected = true;
-      sessions.next(sesss)
+      sessions.next(sesss);
     }
     console.log(`Socket ${socket.id} has connected ${session_name}`);
 
@@ -97,13 +96,17 @@ module.exports = (io: Server) => {
       game.next(d);
     });
 
-    socket.on('pushCurrentQuestionnaire', (i:number) => {
-      console.log("sie drht sich doch")
-      QuestionnaireIndex.next(i)
-    })
+    socket.on('pushCurrentQuestionnaire', (i: number) => {
+      console.log('sie drht sich doch');
+      QuestionnaireIndex.next(i);
+    });
 
     socket.on('pushHTML', (d: string | null) => {
-      pushHTML(d)
+      pushHTML(d);
+    });
+
+    socket.on('pushTimer', (t: number) => {
+      io.emit('setTimer', t);
     });
 
     socket.on('pushLogin', (p: Player) => {
@@ -126,11 +129,11 @@ module.exports = (io: Server) => {
     });
 
     socket.on('disconnect', () => {
-      let sesss = sessions.value
+      let sesss = sessions.value;
       let sess = sesss.find((s) => s.name == session_name);
       if (sess != undefined) {
         sess.connected = false;
-        sessions.next(sesss)
+        sessions.next(sesss);
       }
       console.log(`Socket ${socket.id} has disconnected`);
     });
@@ -176,10 +179,10 @@ module.exports = (io: Server) => {
     });
 
     socket.on('pushInput', (player: Player, input: string) => {
-      let pl = player_list.value      
-      player = pl.find(p => player.name == p.name)
-      player.input = input
-      player_list.next(pl)
+      let pl = player_list.value;
+      player = pl.find((p) => player.name == p.name);
+      player.input = input;
+      player_list.next(pl);
     });
   };
 };

@@ -2,26 +2,39 @@
   <div class="input-group mb-3">
     <span class="input-group-text" id="basic-addon1">Fragebogen:</span>
     <input
-      (change)="currentQuestionnaire.name= i.value"
-      [value]=currentQuestionnaire.name
+      (change)="currentQuestionnaire.name = i.value"
+      [value]="currentQuestionnaire.name"
       #i
       type="text"
       class="form-control"
     />
-    <span class="input-group-text" id="basic-addon1" (click)="removeQustione(currentQuestionnaire)">-</span>
+    <span
+      class="input-group-text"
+      id="basic-addon1"
+      (click)="removeQustione(currentQuestionnaire)"
+      >-</span
+    >
   </div>
   <div class="row" id="board">
-    <div class="col text-white" *ngFor="let kat of currentQuestionnaire.questionnaire">
+    <div
+      class="col text-white"
+      *ngFor="let kat of currentQuestionnaire.questionnaire"
+    >
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon1">Kathegorie:</span>
         <input
-          [value]=kat.name
+          [value]="kat.name"
           (change)="kat.name = j.value"
           #j
           type="text"
           class="form-control"
         />
-        <span class="input-group-text" id="basic-addon1" (click)="removeCath(kat, currentQuestionnaire)">-</span>
+        <span
+          class="input-group-text"
+          id="basic-addon1"
+          (click)="removeCath(kat, currentQuestionnaire)"
+          >-</span
+        >
       </div>
       <h1></h1>
       <div class="row" *ngFor="let frage of kat.fragen">
@@ -31,8 +44,15 @@
           class="btn btn-outline-primary"
           (click)="viewOverlay(frage)"
         >
-          <p class="display-1">{{ frage.value }}
-          <button type="button" class="btn btn-outline-danger float-end " (click)="removeFrage(frage, kat)">-</button>
+          <p class="display-1">
+            {{ frage.value }}
+            <button
+              type="button"
+              class="btn btn-outline-danger float-end"
+              (click)="removeFrage(frage, kat)"
+            >
+              -
+            </button>
           </p>
         </button>
       </div>
@@ -54,54 +74,66 @@
   </div>
 </div>
 
-<div class="footer fixed-bottom ">
-<div class="row">
+<div class="footer fixed-bottom">
+  <div class="row">
     <nav b-1>
       <ul class="pagination justify-content-start mb-0">
-      <li type="" class="page-item activ"  (click)="changecurrentQuestionnaire(questionnaire)" *ngFor="let questionnaire of game">
-          <a class="page-link active" aria-current="page" *ngIf="questionnaire == currentQuestionnaire">{{questionnaire.name}}</a>
-          <a class="page-link" *ngIf="questionnaire != currentQuestionnaire" >{{questionnaire.name}}</a>
-      </li>
-    <li type="" class="page-item" (click)="addQuestionnaire()">
-      <a class="page-link">+</a>
-    </li>
-  </ul>
-  </nav>
-</div>
-<div class="row">
+        <li
+          type=""
+          class="page-item activ"
+          (click)="changecurrentQuestionnaire(questionnaire)"
+          *ngFor="let questionnaire of game"
+        >
+          <a
+            class="page-link active"
+            aria-current="page"
+            *ngIf="questionnaire == currentQuestionnaire"
+            >{{ questionnaire.name }}</a
+          >
+          <a class="page-link" *ngIf="questionnaire != currentQuestionnaire">{{
+            questionnaire.name
+          }}</a>
+        </li>
+        <li type="" class="page-item" (click)="addQuestionnaire()">
+          <a class="page-link">+</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="row">
     <nav>
-    <ul class="pagination justify-content-end mb-0">
-    <input
-      class="form-control rounded-start"
-      (change)="onFileSelected($event)"
-      #fileUpload
-      type="file"
-      id="formFile"
-    />
-    <li type="" class="page-item" (click)="buildGame()">
-      <a class="page-link rounded-end br-3">buildGame</a>
-    </li>
-    <li type="" class="page-item">
-      <a class="page-link rounded-start" href="/gamemaster">GameMaster</a>
-    </li>
-    <li type="" class="page-item">
-      <a class="page-link rounded-end" href="/Dashboard">Dashboard</a>
-    </li>
-    <li type="" class="page-item rounded-start">
-    <a 
-      class="page-link text-success"
-      [href]="download"
-      (click)="downloader()"
-      download="game.json"
-      >save</a
-    >
-    </li>
-    <li type="" class="page-item " (click)="resetGame()">
-    <a class="page-link text-danger">reset</a>
-    </li>
-  </ul>
-  </nav>
-</div>
+      <ul class="pagination justify-content-end mb-0">
+        <input
+          class="form-control rounded-start"
+          (change)="onFileSelected($event)"
+          #fileUpload
+          type="file"
+          id="formFile"
+        />
+        <li type="" class="page-item" (click)="buildGame()">
+          <a class="page-link rounded-end br-3">buildGame</a>
+        </li>
+        <li type="" class="page-item">
+          <a class="page-link rounded-start" href="/gamemaster">GameMaster</a>
+        </li>
+        <li type="" class="page-item">
+          <a class="page-link rounded-end" href="/dashboard">Dashboard</a>
+        </li>
+        <li type="" class="page-item rounded-start">
+          <a
+            class="page-link text-success"
+            [href]="download"
+            (click)="downloader()"
+            download="game.json"
+            >save</a
+          >
+        </li>
+        <li type="" class="page-item" (click)="resetGame()">
+          <a class="page-link text-danger">reset</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
 </div>
 
 <app-gm-overlay

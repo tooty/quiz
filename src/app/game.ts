@@ -4,8 +4,8 @@ export interface PlayerGame {
 }
 
 export interface Questionnaire {
-  name: string,
-  questionnaire: Category[]
+  name: string;
+  questionnaire: Category[];
 }
 
 export interface Frage {

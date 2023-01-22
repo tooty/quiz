@@ -1,5 +1,19 @@
 <!--  <div [innerHTML]="canvasHTML" class="main row" ></div> -->
 <!--  <div class="main row" ><div class="modal-dialog-centered d-flex justify-content-center">hallo</div></div> -->
+<div
+  class="progress text-white"
+  style="position: relative"
+  *ngIf="progress != 0"
+>
+  <div
+    class="progress-bar"
+    [style]="'width: ' + progress + '%'"
+    role="progressbar"
+    aria-valuenow="progress"
+    aria-valuemin="0"
+    aria-valuemax="100"
+  ></div>
+</div>
 <div [innerHTML]="dashboardHTML" class="main"></div>
 <div
   [innerHTML]="canvasHTML"
