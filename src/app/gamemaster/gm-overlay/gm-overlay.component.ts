@@ -26,10 +26,9 @@ export class GmOverlayComponent {
   @Input() currentFrage: Frage | null = null;
   @Input() game: Questionnaire[] = [];
   @Input() show: boolean = false;
-  @Input() gamemaster: boolean = false
   @Output() showOverlay = new EventEmitter<boolean>();
   @Output() gamechange = new EventEmitter<Questionnaire[]>();
-  @ViewChild('content') mycontent: any;
+  @ViewChild('gmtemplate') gmtemplate: any;
 
   player_liste: Player[] = [];
   currentAntwort: SafeHtml = '';
@@ -47,35 +46,9 @@ export class GmOverlayComponent {
     config.keyboard = false;
   }
 
-  changeInput(event: any) {
-    let target:HTMLInputElement = event.currentTarget
-    if (this.currentFrage || false){
-      switch (target.id) {
-        case "frageInput": {
-          target.value = target.value.replace(/\s/g, "")
-          this.currentFrage.antwort = target.value;
-          break
-        }
-        case "antwortInput": {
-          target.value = target.value.replace(/\s/g, "")
-          this.currentFrage.frage = target.value;
-          break
-        }
-        case "valueInput": {
-          this.currentFrage.value = Number(target.value);
-          break
-        }
-        default: {
-          throwError
-        }
-      }
-    }
-    localStorage.setItem('current', target.value);
-  }
-
   ngOnChanges() {
     if (this.show == true) {
-      this.modalService.open(this.mycontent, { size: 'xl' });
+      this.modalService.open(this.gmtemplate, { size: 'xl' });
     }
     this.currentAntwort = this.sanitizer.bypassSecurityTrustHtml(
       this.currentFrage?.antwort ?? ""
@@ -144,11 +117,6 @@ export class GmOverlayComponent {
 
   didPlayergiveAnswer(name: string): number {
     return this.currentFrage?.player?.find((p) => p.name == name)?.sign ?? 0;
-  }
-  toggle(type: string | undefined) {
-    if (this.currentFrage || false){
-     this.currentFrage.type = type;
-    } else {throwError}
   }
 
   changeMoney(pName: string, amount: number, sign: number) {

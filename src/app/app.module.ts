@@ -11,7 +11,8 @@ import { GamemasterComponent } from './gamemaster/gamemaster.component';
 import { GmOverlayComponent } from './gamemaster/gm-overlay/gm-overlay.component';
 import { BuzzerComponent } from './buzzer/buzzer.component';
 import { CookieService } from 'ngx-cookie-service';
-import { DemoComponent } from './demo/demo.component';
+import { EditorComponent } from './demo/editor.component';
+import { EditorOverlayComponent } from './demo/editor-overlay/editor-overlay.component';
 
 const config: SocketIoConfig = {
   options: {
@@ -29,7 +30,8 @@ const config: SocketIoConfig = {
     DashboardComponent,
     GmOverlayComponent,
     BuzzerComponent,
-    DemoComponent,
+    EditorComponent,
+    EditorOverlayComponent,
   ],
   imports: [
     BrowserModule,

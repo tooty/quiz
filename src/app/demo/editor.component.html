@@ -136,11 +136,10 @@
   </div>
 </div>
 
-<app-gm-overlay
+<app-editor-overlay
   [currentFrage]="currentFrage"
   [game]="game"
   [show]="showOverlay"
-  [gamemaster]="false"
   (gamechange)="onGameChange($event)"
   (showOverlay)="showOverlay = $event"
-></app-gm-overlay>
+></app-editor-overlay>

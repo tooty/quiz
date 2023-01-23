@@ -3,10 +3,10 @@ import { Category, Frage, Questionnaire } from '../game';
 
 @Component({
   selector: 'app-demo',
-  templateUrl: './demo.component.html',
-  styleUrls: ['./demo.component.css'],
+  templateUrl: './editor.component.html',
+  styleUrls: ['./editor.component.css'],
 })
-export class DemoComponent {
+export class EditorComponent {
   game: Questionnaire[] = [];
   reloade: boolean = true;
   showOverlay: boolean = false;

@@ -1,6 +1,6 @@
 # Quiz
 small japery style quiz web-app featuring 4 different views and smartphone buzzer and input
-- [game build/edit](https://tooty.github.io/quiz/demo) here you can create you quiz
+- [game build/edit](https://tooty.github.io/quiz/editor) here you can create you quiz
 ----
 - [quizmaster](https://tooty.github.io/quiz/gamemaster) offering controls for the quiz host
 - [participant](https://tooty.github.io/quiz) on player smartphone fettering | buzzer and answer input with time control 
