@@ -26,6 +26,7 @@ export class GmOverlayComponent {
   @Input() currentFrage: Frage | null = null;
   @Input() game: Questionnaire[] = [];
   @Input() show: boolean = false;
+  @Input() gamemaster: boolean = false
   @Output() showOverlay = new EventEmitter<boolean>();
   @Output() gamechange = new EventEmitter<Questionnaire[]>();
   @ViewChild('content') mycontent: any;
@@ -33,7 +34,6 @@ export class GmOverlayComponent {
   player_liste: Player[] = [];
   currentAntwort: SafeHtml = '';
   currentFrage2: SafeHtml = '';
-  gamemaster: boolean = false;
   timerInput: number = 0;
   buzzerActiv: boolean = false;
 
@@ -47,26 +47,30 @@ export class GmOverlayComponent {
     config.keyboard = false;
   }
 
-  antwortInput(value: string) {
-    value = value.replace(/\s/g, "")
-    this.currentAntwort = this.sanitizer.bypassSecurityTrustHtml(value);
-    if (this.currentFrage|| false){
-      this.currentFrage.antwort = value;
-    } else {throwError}
-    localStorage.setItem('current', value);
-  }
-  frageInput(value: string) {
-    value = value.replace(/\s/g, "")
-    this.currentFrage2 = this.sanitizer.bypassSecurityTrustHtml(value);
-    if (this.currentFrage|| false){
-      this.currentFrage.frage = value;
-    } else {throwError}
-    localStorage.setItem('current', value);
-  }
-  valueInput(value: string) {
-    if (this.currentFrage|| false){
-      this.currentFrage.value = Number(value);
-    } else {throwError}
+  changeInput(event: any) {
+    let target:HTMLInputElement = event.currentTarget
+    if (this.currentFrage || false){
+      switch (target.id) {
+        case "frageInput": {
+          target.value = target.value.replace(/\s/g, "")
+          this.currentFrage.antwort = target.value;
+          break
+        }
+        case "antwortInput": {
+          target.value = target.value.replace(/\s/g, "")
+          this.currentFrage.frage = target.value;
+          break
+        }
+        case "valueInput": {
+          this.currentFrage.value = Number(target.value);
+          break
+        }
+        default: {
+          throwError
+        }
+      }
+    }
+    localStorage.setItem('current', target.value);
   }
 
   ngOnChanges() {
@@ -88,11 +92,6 @@ export class GmOverlayComponent {
         this.player_liste = l;
       },
     });
-    if (window.location.href.includes('gamemaster') == true) {
-      this.gamemaster = true;
-    } else {
-      this.gamemaster = false;
-    }
   }
 
   pushFrage2(t: string) {
@@ -115,6 +114,7 @@ export class GmOverlayComponent {
     }else{throwError}
     this.socketService.pushDashboard(t);
   }
+
   pushAntwort(t: string) {
     this.socketService.pushDashboard(t);
     if (this.currentFrage || false) {

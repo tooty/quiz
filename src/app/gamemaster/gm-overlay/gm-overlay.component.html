@@ -7,8 +7,8 @@
       <span class="input-group-text" id="basic-addon1">¢</span>
       <input
         type="number"
-        (change)="valueInput(valueInputid.value)"
-        #valueInputid
+        (change)="changeInput($event)"
+        id="valueInput"
         class="form-control"
         [placeholder]="currentFrage?.value"
       />
@@ -59,7 +59,6 @@
           <div class="row">{{ player.input || player.inputState }}</div>
         </div>
         <input #rangeInput id="rangeInput" type="range" />
-        <p>Input Timer: {{ rangeInput.value }}s</p>
       </div>
       <div *ngIf="currentFrage?.type == 'Buzzer'" class="text-center">
         <button
@@ -115,8 +114,8 @@
     <div class="row w-100" *ngIf="!gamemaster">
       <div class="input-group mb-3 col">
         <textarea
-          (change)="frageInput(frageInputid.value)"
-          #frageInputid
+          (change)="changeInput($event)"
+          id="frageInput"
           type="text"
           class="align-left form-control"
         >
@@ -126,8 +125,8 @@
       </div>
       <div *ngIf="!gamemaster" class="input-group mb-3 col">
         <textarea
-          (change)="antwortInput(antwortInputid.value)"
-          #antwortInputid
+          (change)="changeInput($event)"
+          id="antwortInput"
           type="text"
           class="align-left form-control"
         >

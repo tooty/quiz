@@ -9,6 +9,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrls: ['./dashboard.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
+
 export class DashboardComponent {
   constructor(
     private socketService: SocketService,
@@ -26,6 +27,7 @@ export class DashboardComponent {
         );
       }, 3000);
     }
+
     this.socketService.onHTMLEventHandler(
       (d: { content: boolean; data: string }) => {
         if (d.content == true) {
@@ -37,6 +39,7 @@ export class DashboardComponent {
         }
       }
     );
+
     this.socketService.onTimer((t: number) => {
       let time_0 = t;
       let time = time_0;

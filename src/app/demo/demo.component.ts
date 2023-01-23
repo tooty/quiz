@@ -22,7 +22,6 @@ export class DemoComponent {
 
   @ViewChild('gm') mycontent: any;
 
-  constructor() {}
   ngOnInit() {
     this.addQuestionnaire();
     let stor = localStorage.getItem('game');
