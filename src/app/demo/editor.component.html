@@ -111,13 +111,13 @@
           id="formFile"
         />
         <li type="" class="page-item" (click)="buildGame()">
-          <a class="page-link rounded-end br-3">buildGame</a>
+          <a class="page-link rounded-end rounded-start br-3">buildGame</a>
         </li>
         <li type="" class="page-item">
-          <a class="page-link rounded-start" href="/quiz/gamemaster">GameMaster</a>
+          <a class="page-link rounded-start" routerLink="/gamemaster">GameMaster</a>
         </li>
         <li type="" class="page-item">
-          <a class="page-link rounded-end" href="/quiz/dashboard">Dashboard</a>
+          <a class="page-link rounded-end" routerLink="/dashboard">Dashboard</a>
         </li>
         <li type="" class="page-item rounded-start">
           <a
@@ -136,10 +136,10 @@
   </div>
 </div>
 
-<app-gm-overlay
+<app-editor-overlay
   [currentFrage]="currentFrage"
   [game]="game"
   [show]="showOverlay"
   (gamechange)="onGameChange($event)"
   (showOverlay)="showOverlay = $event"
-></app-gm-overlay>
+></app-editor-overlay>

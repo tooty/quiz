@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { GamemasterComponent } from './gamemaster/gamemaster.component';
 import { BuzzerComponent } from './buzzer/buzzer.component';
-import { DemoComponent } from './demo/demo.component';
+import { EditorComponent } from './demo/editor.component';
 
 const routes: Routes = [
   {
@@ -19,8 +19,8 @@ const routes: Routes = [
     component: DashboardComponent,
   },
   {
-    path: 'demo',
-    component: DemoComponent,
+    path: 'editor',
+    component: EditorComponent,
   },
 ];
 

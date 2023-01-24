@@ -10,9 +10,7 @@ tsc:
 	tsc
 
 buildng:
-	cd ..
-	ng build --output-path ./public
-	cd socket-server
+	ng build --output-path ./socket-server/public/
 watchng:
 	ng build --watch --output-path ./socket-server/public &
 run:

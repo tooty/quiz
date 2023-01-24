@@ -1,18 +1,11 @@
-<ng-template #content contentlet-c="close" let-d="dismiss">
+<ng-template #gmtemplate contentlet-c="close" let-d="dismiss">
+<!--sharedgm-Overlay start-->
   <div class="modal-header text-center">
-    <h4 class="modal-title justify-content-center" *ngIf="gamemaster">
+<!--sharedgm-Overlay stop-->
+    <h4 class="modal-title justify-content-center">
       {{ currentFrage?.value }}
     </h4>
-    <div class="input-group mb-3" *ngIf="!gamemaster">
-      <span class="input-group-text" id="basic-addon1">¢</span>
-      <input
-        type="number"
-        (change)="valueInput(valueInputid.value)"
-        #valueInputid
-        class="form-control"
-        [placeholder]="currentFrage?.value"
-      />
-    </div>
+<!--sharedgm-Overlay start-->
     <button
       (click)="closeQ()"
       type="button"
@@ -21,6 +14,7 @@
       aria-label="Close"
     ></button>
   </div>
+
   <div class="modal-body p-4 text-center">
     <div class="row">
       <h3 class="col">Frage:</h3>
@@ -36,48 +30,51 @@
         [innerHTML]="currentAntwort"
       ></div>
     </div>
-    <div class="flex-nowrap p-0" *ngIf="gamemaster">
-      <button
-        (click)="pushFrage2(currentFrage?.frage ?? '')"
-        type="button"
-        class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-end"
-      >
-        Share Frage
-      </button>
-      <button
-        (click)="pushAntwort(currentFrage?.antwort ?? '')"
-        type="button"
-        class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 horder-end"
-      >
-        Share Antwort
-      </button>
-    </div>
-    <div class="row" *ngIf="gamemaster">
-      <div class="row border-top" *ngIf="currentFrage?.type == 'Input'">
-        <div class="col p-3" *ngFor="let player of player_liste">
-          <h3 class="row">{{ player.name }}</h3>
-          <div class="row">{{ player.input || player.inputState }}</div>
+<!--sharedgm-Overlay stop-->
+    <div>
+      <div class="flex-nowrap p-0">
+        <button
+          (click)="pushFrage2(currentFrage?.frage ?? '')"
+          type="button"
+          class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-end"
+        >
+          Share Frage
+        </button>
+        <button
+          (click)="pushAntwort(currentFrage?.antwort ?? '')"
+          type="button"
+          class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 horder-end"
+        >
+          Share Antwort
+        </button>
+      </div>
+      <div class="row">
+        <div class="row border-top" *ngIf="currentFrage?.type == 'Input'">
+          <div class="col p-3" *ngFor="let player of player_liste">
+            <h3 class="row">{{ player.name }}</h3>
+            <div class="row">{{ player.input || player.inputState }}</div>
+          </div>
+          <input #rangeInput id="rangeInput" type="range" />
         </div>
-        <input #rangeInput id="rangeInput" type="range" />
-        <p>Input Timer: {{ rangeInput.value }}s</p>
-      </div>
-      <div *ngIf="currentFrage?.type == 'Buzzer'" class="text-center">
-        <button
-          *ngIf="!buzzerActiv"
-          class="col btn border w-100"
-          (click)="activateBuzzer()"
-        >
-          🧨
-        </button>
-        <button
-          *ngIf="buzzerActiv"
-          class="col btn border w-100"
-          (click)="testBuzzer()"
-        >
-          ♻️
-        </button>
+        <div *ngIf="currentFrage?.type == 'Buzzer'" class="text-center">
+          <button
+            *ngIf="!buzzerActiv"
+            class="col btn border w-100"
+            (click)="activateBuzzer()"
+          >
+            🧨
+          </button>
+          <button
+            *ngIf="buzzerActiv"
+            class="col btn border w-100"
+            (click)="testBuzzer()"
+          >
+            ♻️
+          </button>
+        </div>
       </div>
     </div>
+<!--sharedgm-Overlay start-->
   </div>
   <div class="modal-footer">
     <div class="row">
@@ -112,48 +109,6 @@
         </div>
       </div>
     </div>
-    <div class="row w-100" *ngIf="!gamemaster">
-      <div class="input-group mb-3 col">
-        <textarea
-          (change)="frageInput(frageInputid.value)"
-          #frageInputid
-          type="text"
-          class="align-left form-control"
-        >
-            {{ currentFrage?.frage }}
-              </textarea
-        >
-      </div>
-      <div *ngIf="!gamemaster" class="input-group mb-3 col">
-        <textarea
-          (change)="antwortInput(antwortInputid.value)"
-          #antwortInputid
-          type="text"
-          class="align-left form-control"
-        >
-            {{ currentFrage?.antwort }}
-            </textarea
-        >
-      </div>
-      <div class="d-flex flex-row-reverse">
-        <td class="overflow-hidden">
-          <div ngbDropdown container="body">
-            <button
-              type="button"
-              class="btn btn-outline-primary btn-sm"
-              ngbDropdownToggle
-            >
-              {{ currentFrage?.type ?? "Type" }}
-            </button>
-            <div ngbDropdownMenu>
-              <button ngbDropdownItem (click)="toggle('Buzzer')">Buzzer</button>
-              <button ngbDropdownItem (click)="toggle('Input')">Input</button>
-              <div class="dropdown-divider"></div>
-              <button ngbDropdownItem (click)="toggle(undefined)">None</button>
-            </div>
-          </div>
-        </td>
-      </div>
-    </div>
+<!--sharedgm-Overlay stop-->
   </div>
 </ng-template>

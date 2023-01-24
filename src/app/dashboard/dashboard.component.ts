@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { SocketService } from '../socket.service';
 import { ViewEncapsulation } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,6 +10,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrls: ['./dashboard.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
+
 export class DashboardComponent {
   constructor(
     private socketService: SocketService,
@@ -26,6 +28,8 @@ export class DashboardComponent {
         );
       }, 3000);
     }
+    this.socketService.subscribe("dashboard")
+
     this.socketService.onHTMLEventHandler(
       (d: { content: boolean; data: string }) => {
         if (d.content == true) {
@@ -37,17 +41,24 @@ export class DashboardComponent {
         }
       }
     );
+
     this.socketService.onTimer((t: number) => {
       let time_0 = t;
       let time = time_0;
-      let timer = window.setInterval(() => {
+      let timer: number|undefined = undefined
+      if (t != 0) {
+        timer = window.setInterval(() => {
         time -= 1;
         this.progress = (100 / time_0) * time;
-        if (time == 0) {
-          clearInterval(timer);
-        }
-      }, 1000);
+          if (t == 0) {
+            clearInterval(timer);
+          }
+        }, 1000);
+
+      } else {
+        this.progress = t
+        clearInterval(timer)
+      }
     });
-    this.socketService.pushDashboard(null);
   }
 }
