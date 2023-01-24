@@ -1,25 +1,15 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChild,
-} from '@angular/core';
-import {
-  NgbModalConfig,
-  NgbModal,
-  NgbDropdownModule,
-} from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input, Output } from '@angular/core'
+import { EventEmitter, ViewChild } from '@angular/core';
+import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from '../../socket.service';
 import { Frage, Player, Questionnaire } from '../../game';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-gm-overlay',
   templateUrl: './gm-overlay.component.html',
   styleUrls: ['./gm-overlay.component.css'],
-  providers: [NgbModalConfig, NgbModal, NgbDropdownModule],
+  providers: [NgbModalConfig, NgbModal],
 })
 
 export class GmOverlayComponent {
@@ -84,7 +74,7 @@ export class GmOverlayComponent {
           }
         }, 1000);
       }
-    }else{throwError}
+    }else{ console.error }
     this.socketService.pushDashboard(t);
   }
 
@@ -92,7 +82,7 @@ export class GmOverlayComponent {
     this.socketService.pushDashboard(t);
     if (this.currentFrage || false) {
       this.currentFrage.activ = false;
-    } else{throwError}
+    } else{console.error}
     localStorage.setItem('game', JSON.stringify(this.game));
   }
 
@@ -137,7 +127,7 @@ export class GmOverlayComponent {
         this.currentFrage.player = [{ name: pName, sign: sign }].concat(
           this.currentFrage?.player ?? []
         );
-      } else {throwError}
+      } else {console.error}
     }
 
     //change player_list money

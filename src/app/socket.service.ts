@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { Player, Category, Questionnaire } from './game';
+import { Player, Questionnaire } from './game';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class SocketService {
   constructor(private socket: Socket) {}
   player_liste = new BehaviorSubject<Player[]>([]);
