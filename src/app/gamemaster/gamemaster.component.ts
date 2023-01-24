@@ -10,7 +10,7 @@ import { Frage, Questionnaire } from '../game';
 export class GamemasterComponent {
   game: Questionnaire[] = [];
   currentQuestionnaire: Questionnaire = { name: '', questionnaire: [] };
-  currentFrage: Frage | null = null 
+  currentFrage: Frage | null = null;
   showOverlay: boolean = false;
 
   constructor(private socketService: SocketService) {}

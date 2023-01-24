@@ -4,10 +4,10 @@ import { BehaviorSubject } from 'rxjs';
 import { PlayerList, Session, Game } from './socket-exports';
 
 const fs = require('fs');
-const playerFile = __dirname + '/../src/player.json'
-const gameFile = __dirname + '/../src/game.json'
+const playerFile = __dirname + '/../src/player.json';
+const gameFile = __dirname + '/../src/game.json';
 const QuestionnaireIndex = new BehaviorSubject<number>(-1);
-const player_list = new PlayerList([])
+const player_list = new PlayerList([]);
 const game = new Game([]);
 const session = new Session([]);
 
@@ -21,14 +21,14 @@ module.exports = (io: Server) => {
 
   QuestionnaireIndex.subscribe({
     next: () => {
-      const html = game.render(QuestionnaireIndex.value) 
-      io.to("dashboard").emit('dashHTML', { content: false, data: html});
+      const html = game.render(QuestionnaireIndex.value);
+      io.to('dashboard').emit('dashHTML', { content: false, data: html });
     },
   });
 
   session.subscribe({
     next: () => {
-      session.joinPlayerList(player_list)
+      session.joinPlayerList(player_list);
     },
   });
 
@@ -39,29 +39,29 @@ module.exports = (io: Server) => {
   });
 
   return (socket: Socket) => {
-    const token = socket.handshake.auth?.token ?? 'no token provided'
+    const token = socket.handshake.auth?.token ?? 'no token provided';
 
-    session.connect(token, socket)
+    session.connect(token, socket);
     console.log(`Socket ${socket.id} has connected ${token}`);
     socket.on('disconnect', () => {
-      session.disconnect(token)
+      session.disconnect(token);
       console.log(`Socket ${socket.id} has disconnected ${token}`);
     });
 
     socket.on('pushHTML', (d: string | null) => {
       let content = true;
       if (d == null) {
-        d = game.render(QuestionnaireIndex.value)
-        content = false
+        d = game.render(QuestionnaireIndex.value);
+        content = false;
       }
-      io.to("dashboard").emit('dashHTML', { content: content, data: d });
+      io.to('dashboard').emit('dashHTML', { content: content, data: d });
     });
 
     socket.on('pushLogin', (p: Player) => {
-      socket.join("participant")
+      socket.join('participant');
       if (p.name != '') {
-        player_list.login(p)
-        session.login(p)
+        player_list.login(p);
+        session.login(p);
       }
     });
 
@@ -70,18 +70,22 @@ module.exports = (io: Server) => {
     });
 
     socket.on('stopInput', () => {
-      player_list.setInputState(false)
-      io.emit('setTimer', 0)
+      player_list.setInputState(false);
+      io.emit('setTimer', 0);
     });
-    socket.on('subscribe', (s) => socket.join(s))
+    socket.on('subscribe', (s) => socket.join(s));
     socket.on('pushGame', (g: Questionnaire[]) => game.next(g));
-    socket.on('pushBuzzer',(p: Player) => player_list.pushBuzzer(p));
-    socket.on('syncPlayerListe', (p:Player[]) => player_list.next(p));
-    socket.on('resetBuzzer',() => player_list.setAllBuzzer("none"));
-    socket.on('testBuzzer',() => player_list.setAllBuzzer("yellow"));
-    socket.on('activateBuzzer',() => player_list.setAllBuzzer("red"));
+    socket.on('pushBuzzer', (p: Player) => player_list.pushBuzzer(p));
+    socket.on('syncPlayerListe', (p: Player[]) => player_list.next(p));
+    socket.on('resetBuzzer', () => player_list.setAllBuzzer('none'));
+    socket.on('testBuzzer', () => player_list.setAllBuzzer('yellow'));
+    socket.on('activateBuzzer', () => player_list.setAllBuzzer('red'));
     socket.on('activateInput', () => player_list.setInputState(true));
-    socket.on('pushInput', (p: Player,i:string)=>player_list.pushInput(p,i));
-    socket.on('pushCurrentQuestionnaire',(i:number) => QuestionnaireIndex.next(i));
+    socket.on('pushInput', (p: Player, i: string) =>
+      player_list.pushInput(p, i)
+    );
+    socket.on('pushCurrentQuestionnaire', (i: number) =>
+      QuestionnaireIndex.next(i)
+    );
   };
 };

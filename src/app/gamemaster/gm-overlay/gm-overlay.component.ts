@@ -1,4 +1,4 @@
-import { Component, Input, Output } from '@angular/core'
+import { Component, Input, Output } from '@angular/core';
 import { EventEmitter, ViewChild } from '@angular/core';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from '../../socket.service';
@@ -11,7 +11,6 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrls: ['./gm-overlay.component.css'],
   providers: [NgbModalConfig, NgbModal],
 })
-
 export class GmOverlayComponent {
   @Input() currentFrage: Frage | null = null;
   @Input() game: Questionnaire[] = [];
@@ -41,10 +40,10 @@ export class GmOverlayComponent {
       this.modalService.open(this.gmtemplate, { size: 'xl' });
     }
     this.currentAntwort = this.sanitizer.bypassSecurityTrustHtml(
-      this.currentFrage?.antwort ?? ""
+      this.currentFrage?.antwort ?? ''
     );
     this.currentFrage2 = this.sanitizer.bypassSecurityTrustHtml(
-      this.currentFrage?.frage ?? ""
+      this.currentFrage?.frage ?? ''
     );
   }
 
@@ -58,7 +57,7 @@ export class GmOverlayComponent {
   }
 
   pushFrage2(t: string) {
-    if (this.currentFrage || false){
+    if (this.currentFrage || false) {
       if (this.currentFrage.type == 'Input') {
         let timeInput: any = document.getElementById('rangeInput');
         let time = timeInput.value;
@@ -74,7 +73,9 @@ export class GmOverlayComponent {
           }
         }, 1000);
       }
-    }else{ console.error }
+    } else {
+      console.error;
+    }
     this.socketService.pushDashboard(t);
   }
 
@@ -82,7 +83,9 @@ export class GmOverlayComponent {
     this.socketService.pushDashboard(t);
     if (this.currentFrage || false) {
       this.currentFrage.activ = false;
-    } else{console.error}
+    } else {
+      console.error;
+    }
     localStorage.setItem('game', JSON.stringify(this.game));
   }
 
@@ -117,17 +120,19 @@ export class GmOverlayComponent {
     //reset case
     if (before != 0) {
       sign = before * -1;
-      if (this.currentFrage || false){
+      if (this.currentFrage || false) {
         this.currentFrage.player = this.currentFrage?.player?.filter(
           (p) => p.name != pName
         );
       }
     } else {
-      if (this.currentFrage || false){
+      if (this.currentFrage || false) {
         this.currentFrage.player = [{ name: pName, sign: sign }].concat(
           this.currentFrage?.player ?? []
         );
-      } else {console.error}
+      } else {
+        console.error;
+      }
     }
 
     //change player_list money

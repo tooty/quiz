@@ -21,4 +21,4 @@ make generate
 mkdir public
 make run
 ```
-now brows to http://localhost/demo to upload you game file
+now brows to http://localhost/editor to upload you game file

@@ -17,7 +17,7 @@ import { throwError } from 'rxjs';
 @Component({
   selector: 'app-editor-overlay',
   templateUrl: './editor-overlay.component.html',
-  styleUrls: ['./editor-overlay.component.css']
+  styleUrls: ['./editor-overlay.component.css'],
 })
 export class EditorOverlayComponent {
   @Input() currentFrage: Frage | null = null;
@@ -41,25 +41,25 @@ export class EditorOverlayComponent {
   }
 
   changeInput(event: any) {
-    let target:HTMLInputElement = event.currentTarget
-    if (this.currentFrage || false){
+    let target: HTMLInputElement = event.currentTarget;
+    if (this.currentFrage || false) {
       switch (target.id) {
-        case "frageInput": {
-          target.value = target.value.replace(/\s/g, "")
+        case 'frageInput': {
+          target.value = target.value.replace(/\s/g, '');
           this.currentFrage.antwort = target.value;
-          break
+          break;
         }
-        case "antwortInput": {
-          target.value = target.value.replace(/\s/g, "")
+        case 'antwortInput': {
+          target.value = target.value.replace(/\s/g, '');
           this.currentFrage.frage = target.value;
-          break
+          break;
         }
-        case "valueInput": {
+        case 'valueInput': {
           this.currentFrage.value = Number(target.value);
-          break
+          break;
         }
         default: {
-          throwError
+          throwError;
         }
       }
     }
@@ -71,10 +71,10 @@ export class EditorOverlayComponent {
       this.modalService.open(this.editortemplate, { size: 'xl' });
     }
     this.currentAntwort = this.sanitizer.bypassSecurityTrustHtml(
-      this.currentFrage?.antwort ?? ""
+      this.currentFrage?.antwort ?? ''
     );
     this.currentFrage2 = this.sanitizer.bypassSecurityTrustHtml(
-      this.currentFrage?.frage ?? ""
+      this.currentFrage?.frage ?? ''
     );
   }
 
@@ -85,8 +85,10 @@ export class EditorOverlayComponent {
   }
 
   toggle(type: string | undefined) {
-    if (this.currentFrage || false){
-     this.currentFrage.type = type;
-    } else {throwError}
+    if (this.currentFrage || false) {
+      this.currentFrage.type = type;
+    } else {
+      throwError;
+    }
   }
 }

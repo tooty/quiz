@@ -10,7 +10,6 @@ import { interval } from 'rxjs';
   styleUrls: ['./dashboard.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-
 export class DashboardComponent {
   constructor(
     private socketService: SocketService,
@@ -28,7 +27,7 @@ export class DashboardComponent {
         );
       }, 3000);
     }
-    this.socketService.subscribe("dashboard")
+    this.socketService.subscribe('dashboard');
 
     this.socketService.onHTMLEventHandler(
       (d: { content: boolean; data: string }) => {
@@ -45,19 +44,18 @@ export class DashboardComponent {
     this.socketService.onTimer((t: number) => {
       let time_0 = t;
       let time = time_0;
-      let timer: number|undefined = undefined
+      let timer: number | undefined = undefined;
       if (t != 0) {
         timer = window.setInterval(() => {
-        time -= 1;
-        this.progress = (100 / time_0) * time;
+          time -= 1;
+          this.progress = (100 / time_0) * time;
           if (t == 0) {
             clearInterval(timer);
           }
         }, 1000);
-
       } else {
-        this.progress = t
-        clearInterval(timer)
+        this.progress = t;
+        clearInterval(timer);
       }
     });
   }

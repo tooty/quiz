@@ -6,7 +6,6 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-
 export class SocketService {
   constructor(private socket: Socket) {}
   player_liste = new BehaviorSubject<Player[]>([]);
@@ -77,7 +76,7 @@ export class SocketService {
   pushTimer(t: number) {
     this.socket.emit('pushTimer', t);
   }
-  subscribe(s: string){
+  subscribe(s: string) {
     this.socket.emit('subscribe', s);
   }
 }
