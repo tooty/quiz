@@ -16,6 +16,7 @@ export class SocketService {
       callback(t);
     });
   }
+
   onHTMLEventHandler(callback: Function) {
     //subs dashboard
     return this.socket.on(
@@ -75,5 +76,8 @@ export class SocketService {
   }
   pushTimer(t: number) {
     this.socket.emit('pushTimer', t);
+  }
+  subscribe(s: string){
+    this.socket.emit('subscribe', s);
   }
 }
