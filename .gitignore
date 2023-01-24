@@ -6,6 +6,7 @@
 /out-tsc
 /bazel-out
 /*.js
+*.js
 
 # Node
 /node_modules
