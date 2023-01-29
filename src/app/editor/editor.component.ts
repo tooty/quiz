@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Output, ViewChild } from '@angular/core';
 import { Category, Frage, Questionnaire } from '../game';
 
 @Component({
@@ -33,14 +33,15 @@ export class EditorComponent {
 
   viewOverlay(frage: Frage) {
     this.showOverlay = true;
+    console.log('show.emit');
     this.currentFrage = frage;
   }
+
   onGameChange(game: Questionnaire[] | null) {
     if (game != null) {
       this.game = game;
     }
     localStorage.setItem('game', JSON.stringify(this.game));
-    console.log('this.onGameChange');
   }
 
   downloader() {

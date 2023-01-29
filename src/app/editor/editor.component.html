@@ -1,6 +1,5 @@
 <div class="container-fluid text-center">
   <div class="input-group mb-3">
-    <span class="input-group-text" id="basic-addon1">Fragebogen:</span>
     <input
       (change)="currentQuestionnaire.name = i.value"
       [value]="currentQuestionnaire.name"
@@ -21,7 +20,6 @@
       *ngFor="let kat of currentQuestionnaire.questionnaire"
     >
       <div class="input-group mb-3">
-        <span class="input-group-text" id="basic-addon1">Kathegorie:</span>
         <input
           [value]="kat.name"
           (change)="kat.name = j.value"
@@ -37,18 +35,18 @@
         >
       </div>
       <h1></h1>
-      <div class="row" *ngFor="let frage of kat.fragen">
+      <div class="row position-relative" *ngFor="let frage of kat.fragen">
         <button
           *ngIf="frage.activ"
           type="button"
-          class="btn btn-outline-primary"
+          class="btn btn-outline-primary p-0"
           (click)="viewOverlay(frage)"
         >
-          <p class="display-1">
+          <p class="display-1 w-100">
             {{ frage.value }}
             <button
               type="button"
-              class="btn btn-outline-danger float-end"
+              class="btn btn-outline-danger position-absolute top-0 end-0 m-0"
               (click)="removeFrage(frage, kat)"
             >
               -
@@ -111,15 +109,7 @@
           id="formFile"
         />
         <li type="" class="page-item" (click)="buildGame()">
-          <a class="page-link rounded-end rounded-start br-3">buildGame</a>
-        </li>
-        <li type="" class="page-item">
-          <a class="page-link rounded-start" routerLink="/gamemaster"
-            >GameMaster</a
-          >
-        </li>
-        <li type="" class="page-item">
-          <a class="page-link rounded-end" routerLink="/dashboard">Dashboard</a>
+          <a class="page-link rounded-start br-3">buildGame</a>
         </li>
         <li type="" class="page-item rounded-start">
           <a
@@ -141,7 +131,6 @@
 <app-editor-overlay
   [currentFrage]="currentFrage"
   [game]="game"
-  [show]="showOverlay"
   (gamechange)="onGameChange($event)"
-  (showOverlay)="showOverlay = $event"
+  [(show)]="showOverlay"
 ></app-editor-overlay>

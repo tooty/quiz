@@ -7,6 +7,8 @@
 /bazel-out
 /*.js
 *.js
+/socket-server/src/*.json
+*capacitor*
 
 # Node
 /node_modules
@@ -53,6 +55,8 @@ socket-server/node_modules
 Thumbs.db
 src/app/game.js
 src/app/game.js.map
+
+/ios
 
 #tsc
 *js.map

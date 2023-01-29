@@ -3,9 +3,9 @@ import { Player, Questionnaire } from '../../src/app/game';
 import { BehaviorSubject } from 'rxjs';
 import { PlayerList, Session, Game } from './socket-exports';
 
-const fs = require('fs');
-const playerFile = __dirname + '/../src/player.json';
-const gameFile = __dirname + '/../src/game.json';
+//const fs = require('fs');
+//const playerFile = __dirname + '/../src/player.json';
+//const gameFile = __dirname + '/../src/game.json';
 const QuestionnaireIndex = new BehaviorSubject<number>(-1);
 const player_list = new PlayerList([]);
 const game = new Game([]);
@@ -15,7 +15,7 @@ module.exports = (io: Server) => {
   player_list.subscribe({
     next: (pl) => {
       io.emit('sharePlayer', pl);
-      fs.writeFileSync(playerFile, JSON.stringify(pl));
+      //     fs.writeFileSync(playerFile, JSON.stringify(pl));
     },
   });
 
@@ -32,11 +32,11 @@ module.exports = (io: Server) => {
     },
   });
 
-  game.subscribe({
-    next: (g) => {
-      fs.writeFileSync(gameFile, JSON.stringify(g));
-    },
-  });
+  //  game.subscribe({
+  //    next: (g) => {
+  //      fs.writeFileSync(gameFile, JSON.stringify(g));
+  //    },
+  //  });
 
   return (socket: Socket) => {
     const token = socket.handshake.auth?.token ?? 'no token provided';
@@ -46,6 +46,10 @@ module.exports = (io: Server) => {
     socket.on('disconnect', () => {
       session.disconnect(token);
       console.log(`Socket ${socket.id} has disconnected ${token}`);
+    });
+
+    socket.on('ping', (t: number) => {
+      socket.emit('ping', t);
     });
 
     socket.on('pushHTML', (d: string | null) => {

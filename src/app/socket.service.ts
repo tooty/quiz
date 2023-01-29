@@ -10,8 +10,19 @@ export class SocketService {
   constructor(private socket: Socket) {}
   player_liste = new BehaviorSubject<Player[]>([]);
 
+  onDisconnect(callback: Function) {
+    this.socket.on('disconnect', (reason: string) => {
+      callback(reason);
+    });
+  }
+
   onTimer(callback: Function) {
     this.socket.on('setTimer', (t: number) => {
+      callback(t);
+    });
+  }
+  onPing(callback: Function) {
+    this.socket.on('ping', (t: number) => {
       callback(t);
     });
   }
@@ -78,5 +89,8 @@ export class SocketService {
   }
   subscribe(s: string) {
     this.socket.emit('subscribe', s);
+  }
+  ping() {
+    this.socket.emit('ping', Date.now());
   }
 }

@@ -4,6 +4,7 @@ import {
   Output,
   EventEmitter,
   ViewChild,
+  SimpleChanges,
 } from '@angular/core';
 import {
   NgbModalConfig,
@@ -23,7 +24,7 @@ export class EditorOverlayComponent {
   @Input() currentFrage: Frage | null = null;
   @Input() game: Questionnaire[] = [];
   @Input() show: boolean = false;
-  @Output() showOverlay = new EventEmitter<boolean>();
+  @Output() showChange = new EventEmitter();
   @Output() gamechange = new EventEmitter<Questionnaire[]>();
   @ViewChild('editortemplate') editortemplate: any;
 
@@ -38,19 +39,19 @@ export class EditorOverlayComponent {
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
+    console.log('init');
   }
 
   changeInput(event: any) {
     let target: HTMLInputElement = event.currentTarget;
     if (this.currentFrage || false) {
+      target.value = target.value.replace(/[^\S ]/g, '').replace(/^ +/, '').replace(/  +/, '');
       switch (target.id) {
-        case 'frageInput': {
-          target.value = target.value.replace(/\s/g, '');
+        case 'antwortInput': {
           this.currentFrage.antwort = target.value;
           break;
         }
-        case 'antwortInput': {
-          target.value = target.value.replace(/\s/g, '');
+        case 'frageInput': {
           this.currentFrage.frage = target.value;
           break;
         }
@@ -64,12 +65,6 @@ export class EditorOverlayComponent {
       }
     }
     localStorage.setItem('current', target.value);
-  }
-
-  ngOnChanges() {
-    if (this.show == true) {
-      this.modalService.open(this.editortemplate, { size: 'xl' });
-    }
     this.currentAntwort = this.sanitizer.bypassSecurityTrustHtml(
       this.currentFrage?.antwort ?? ''
     );
@@ -78,9 +73,26 @@ export class EditorOverlayComponent {
     );
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if ('show' in changes) {
+      if (this.show) {
+        this.modalService.open(this.editortemplate, { size: 'xl' });
+      }
+      console.log(changes);
+    }
+    if ('currentFrage' in changes) {
+      this.currentAntwort = this.sanitizer.bypassSecurityTrustHtml(
+        this.currentFrage?.antwort ?? ''
+      );
+      this.currentFrage2 = this.sanitizer.bypassSecurityTrustHtml(
+        this.currentFrage?.frage ?? ''
+      );
+    }
+  }
+
   closeQ() {
     this.gamechange.next(this.game);
-    this.showOverlay.emit(false);
+    this.showChange.emit(false);
     this.modalService.dismissAll();
   }
 

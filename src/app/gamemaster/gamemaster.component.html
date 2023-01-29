@@ -27,9 +27,21 @@
   </div>
 </div>
 
+
+  <div *ngIf="currentQuestionnaire.name == ''" class="container text-center" >
+  <button
+    type="button"
+    class="btn btn-outline-primary"
+    (click)="changecurrentQuestionnaire(questionnaire)"
+    *ngFor="let questionnaire of game"
+  >
+    <p class="display-1">{{ questionnaire.name }}</p>
+  </button>
+</div>
+
 <div class="footer fixed-bottom">
   <div class="row">
-    <nav b-1>
+    <nav>
       <ul class="pagination justify-content-start mb-0">
         <li
           type=""
