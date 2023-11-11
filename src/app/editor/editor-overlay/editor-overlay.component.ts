@@ -88,23 +88,6 @@ export class EditorOverlayComponent {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if ('show' in changes) {
-      if (this.show) {
-        this.modalService.open(this.editortemplate, { size: 'xl' });
-      }
-      console.log(changes);
-    }
-    if ('currentFrage' in changes) {
-      this.currentAntwort = this.sanitizer.bypassSecurityTrustHtml(
-        this.currentFrage?.antwort ?? ''
-      );
-      this.currentFrage2 = this.sanitizer.bypassSecurityTrustHtml(
-        this.currentFrage?.frage ?? ''
-      );
-    }
-  }
-
   closeQ() {
     //Sort all by value
     this.game.map(x => x.questionnaire.map(y => {

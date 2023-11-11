@@ -15,7 +15,7 @@ module.exports = (io: Server) => {
   player_list.subscribe({
     next: (pl) => {
       io.emit('sharePlayer', pl);
-      fs.writeFileSync(playerFile, JSON.stringify(pl));
+      //fs.writeFileSync(playerFile, JSON.stringify(pl));
     },
   });
 
