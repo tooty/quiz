@@ -4,22 +4,11 @@
     <!--sharedgm-Overlay stop-->
     <div class="input-group mb-3">
       <span class="input-group-text" id="basic-addon1">¢</span>
-      <input
-        type="number"
-        (change)="changeInput($event)"
-        id="valueInput"
-        class="form-control"
-        [placeholder]="currentFrage?.value"
-      />
+      <input type="number" (change)="changeValue($event)" id="valueInput" class="form-control"
+        [placeholder]="currentFrage?.value" />
     </div>
     <!--sharedgm-Overlay start-->
-    <button
-      (click)="closeQ()"
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="modal"
-      aria-label="Close"
-    ></button>
+    <button (click)="closeQ()" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
 
   <div class="modal-body p-4 text-center">
@@ -28,14 +17,8 @@
       <h3 class="col">Antwort:</h3>
     </div>
     <div class="row">
-      <div
-        class="col d-flex justify-content-center align-items-center display-6"
-        [innerHTML]="currentFrage2"
-      ></div>
-      <div
-        class="col d-flex justify-content-center align-items-center display-6"
-        [innerHTML]="currentAntwort"
-      ></div>
+      <div class="col d-flex justify-content-center align-items-center display-6" [innerHTML]="currentFrage2"></div>
+      <div class="col d-flex justify-content-center align-items-center display-6" [innerHTML]="currentAntwort"></div>
     </div>
   </div>
 
@@ -43,35 +26,19 @@
     <!--sharedgm-Overlay stop-->
     <div class="row w-100">
       <div class="input-group mb-3 col">
-        <textarea
-          (input)="changeInput($event)"
-          id="frageInput"
-          type="text"
-          class="align-left form-control"
-        >
-            {{ currentFrage?.frage }}
-              </textarea
-        >
+        <ace class="align-left " [config]="ace_config" style="height:150px;" [(value)]="currentFrage?.frage || test"
+          (valueChange)=changeFrage($event)>test</ace>
       </div>
       <div class="input-group mb-3 col">
-        <textarea
-          (input)="changeInput($event)"
-          id="antwortInput"
-          type="text"
-          class="align-left form-control"
-        >
-            {{ currentFrage?.antwort }}
-            </textarea
-        >
+        <ace class="align-left " [config]="ace_config" style="height:150px;" [(value)]="currentFrage?.antwort || test"
+          (valueChange)=changeAntwort($event)>
+          {{ currentFrage?.antwort }}
+        </ace>
       </div>
       <div class="d-flex flex-row-reverse">
         <td class="overflow-hidden">
           <div ngbDropdown container="body">
-            <button
-              type="button"
-              class="btn btn-outline-primary btn-sm"
-              ngbDropdownToggle
-            >
+            <button type="button" class="btn btn-outline-primary btn-sm" ngbDropdownToggle>
               {{ currentFrage?.type ?? "Type" }}
             </button>
             <div ngbDropdownMenu>

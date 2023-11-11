@@ -15,7 +15,7 @@ module.exports = (io: Server) => {
   player_list.subscribe({
     next: (pl) => {
       io.emit('sharePlayer', pl);
-      //     fs.writeFileSync(playerFile, JSON.stringify(pl));
+      fs.writeFileSync(playerFile, JSON.stringify(pl));
     },
   });
 
@@ -39,6 +39,7 @@ module.exports = (io: Server) => {
   //  });
 
   return (socket: Socket) => {
+    console.log(socket.handshake)
     const token = socket.handshake.auth?.token ?? 'no token provided';
 
     session.connect(token, socket);
@@ -77,7 +78,7 @@ module.exports = (io: Server) => {
       player_list.setInputState(false);
       io.emit('setTimer', 0);
     });
-    socket.on('subscribe', (s) => socket.join(s));
+    socket.on('subscribe', (s: string) => socket.join(s));
     socket.on('pushGame', (g: Questionnaire[]) => game.next(g));
     socket.on('pushBuzzer', (p: Player) => player_list.pushBuzzer(p));
     socket.on('syncPlayerListe', (p: Player[]) => player_list.next(p));

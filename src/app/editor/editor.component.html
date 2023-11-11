@@ -1,136 +1,67 @@
 <div class="container-fluid text-center">
   <div class="input-group mb-3">
-    <input
-      (change)="currentQuestionnaire.name = i.value"
-      [value]="currentQuestionnaire.name"
-      #i
-      type="text"
-      class="form-control"
-    />
-    <span
-      class="input-group-text text-danger"
-      id="basic-addon1"
-      (click)="removeQustione(currentQuestionnaire)"
-      >-</span
-    >
+    <input (change)="currentQuestionnaire.name = i.value" [value]="currentQuestionnaire.name" #i type="text"
+      class="form-control" />
+    <button class="btn btn-outline-danger" id="basic-addon1" (click)="removeQustione(currentQuestionnaire)">-</button>
   </div>
   <div class="row" id="board">
-    <div
-      class="col text-white"
-      *ngFor="let kat of currentQuestionnaire.questionnaire"
-    >
+    <div class="col text-white" *ngFor="let kat of currentQuestionnaire.questionnaire">
       <div class="input-group mb-3">
-        <input
-          [value]="kat.name"
-          (change)="kat.name = j.value"
-          #j
-          type="text"
-          class="form-control"
-        />
-        <span
-          class="input-group-text text-danger"
-          id="basic-addon1"
-          (click)="removeCath(kat, currentQuestionnaire)"
-          >-</span
-        >
+        <input [value]="kat.name" (change)="kat.name = j.value" #j type="text" class="form-control" />
+        <button class="btn btn-outline-danger" id="basic-addon1"
+          (click)="removeCath(kat, currentQuestionnaire)">-</button>
       </div>
       <h1></h1>
       <div class="row position-relative" *ngFor="let frage of kat.fragen">
-        <button
-          *ngIf="frage.activ"
-          type="button"
-          class="btn btn-outline-primary p-0"
-          (click)="viewOverlay(frage)"
-        >
+        <button *ngIf="frage.activ" type="button" class="btn btn-outline-primary p-0" (click)="viewOverlay(frage)">
           <p class="display-1 w-100">
             {{ frage.value }}
-            <button
-              type="button"
-              class="btn btn-outline-danger position-absolute top-0 end-0 m-0"
-              (click)="removeFrage(frage, kat)"
-            >
+            <button type="button" class="btn btn-outline-danger position-absolute top-0 end-0 m-0"
+              (click)="removeFrage(frage, kat)">
               -
             </button>
           </p>
         </button>
       </div>
-      <button
-        type="button"
-        class="btn btn-outline-info"
-        (click)="addQuestion(kat)"
-      >
+      <button type="button" class="btn btn-outline-info" (click)="addQuestion(kat)">
         <p class="display-1">+</p>
       </button>
     </div>
-    <button
-      type="button"
-      class="btn btn-outline-info col"
-      (click)="addCategory()"
-    >
+    <button type="button" class="btn btn-outline-info col" (click)="addCategory()">
       <p class="display-1">+</p>
     </button>
   </div>
 </div>
 
 <div class="footer fixed-bottom">
-  <div class="row">
-    <nav b-1>
-      <ul class="pagination justify-content-start mb-0">
-        <li
-          type=""
-          class="page-item activ"
-          (click)="changecurrentQuestionnaire(questionnaire)"
-          *ngFor="let questionnaire of game"
-        >
-          <a
-            class="page-link active"
-            aria-current="page"
-            *ngIf="questionnaire == currentQuestionnaire"
-            >{{ questionnaire.name }}</a
-          >
-          <a class="page-link" *ngIf="questionnaire != currentQuestionnaire">{{
-            questionnaire.name
-          }}</a>
-        </li>
-        <li type="" class="page-item" (click)="addQuestionnaire()">
-          <a class="page-link">+</a>
-        </li>
-      </ul>
-    </nav>
+  <div class="row w-50">
+    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+      <ng-container *ngFor="let questionnaire of game">
+        <input type="radio" class="btn-check" name="btnradio" id={{game.indexOf(questionnaire)}}
+          value={{game.indexOf(questionnaire)}} autocomplete="off" checked>
+        <label class="btn btn-outline-primary" for={{game.indexOf(questionnaire)}}
+          (click)="changecurrentQuestionnaire(questionnaire)">{{questionnaire.name}} </label>
+      </ng-container>
+      <button class="btn btn-outline-success" (click)="addQuestionnaire()">+</button>
+    </div>
   </div>
   <div class="row">
     <nav>
       <ul class="pagination justify-content-end mb-0">
-        <input
-          class="form-control rounded-start"
-          (change)="onFileSelected($event)"
-          #fileUpload
-          type="file"
-          id="formFile"
-        />
-        <li type="" class="page-item" (click)="buildGame()">
-          <a class="page-link rounded-start br-3">buildGame</a>
-        </li>
-        <li type="" class="page-item rounded-start">
-          <a
-            class="page-link text-success"
-            [href]="download"
-            (click)="downloader()"
-            download="game.json"
-            >save</a
-          >
-        </li>
-        <li type="" class="page-item" (click)="resetGame()">
-          <a class="page-link text-danger">reset</a>
-        </li>
+        <input class="form-control " (change)="onFileSelected($event)" #fileUpload type="file" id="formFile" />
+        <button type="" class="btn btn-outline-primary" (click)="buildGame()">
+          buildGame
+        </button>
+        <button type="" class="btn btn-outline-success">
+          <a class="text-success" [href]="download" (click)="downloader()" download="game.json">save</a>
+        </button>
+        <button type="" class="btn btn-outline-danger" (click)="resetGame()">
+          reset
+        </button>
       </ul>
     </nav>
   </div>
 </div>
 
-<app-editor-overlay
-  [currentFrage]="currentFrage"
-  [game]="game"
-  (gamechange)="onGameChange($event)"
-  [(show)]="showOverlay"
-></app-editor-overlay>
+<app-editor-overlay [currentFrage]="currentFrage" [game]="game" (gamechange)="onGameChange($event)"
+  [(show)]="showOverlay"></app-editor-overlay>

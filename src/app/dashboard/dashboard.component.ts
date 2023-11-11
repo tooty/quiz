@@ -9,22 +9,27 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrls: ['./dashboard.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
+
 export class DashboardComponent {
   constructor(
     private socketService: SocketService,
     private sanitizer: DomSanitizer
   ) {}
   canvasHTML: SafeHtml = '';
+  current_before:string = localStorage.getItem('current') ?? '';
   dashboardHTML: string = '';
   progress: number = 0;
 
   ngOnInit() {
     if (window.location.href.includes('github') == true) {
-      let w = window.setInterval(() => {
-        this.canvasHTML = this.sanitizer.bypassSecurityTrustHtml(
-          localStorage.getItem('current') ?? ''
-        );
-      }, 3000);
+      window.setInterval(() => {
+        if (this.current_before != localStorage.getItem('current') ?? '') {
+          this.canvasHTML = this.sanitizer.bypassSecurityTrustHtml(
+            localStorage.getItem('current') ?? ''
+          );
+          this.current_before = localStorage.getItem('current') ?? '';
+        }
+      }, 100);
     }
     this.socketService.subscribe('dashboard');
 

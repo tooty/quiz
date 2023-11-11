@@ -1,141 +1,111 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Session = exports.Game = exports.PlayerList = void 0;
-var rxjs_1 = require("rxjs");
-var pug = require('pug');
-var overview_pug = __dirname + '/../src/overview.pug';
-var dashboard_pug = __dirname + '/../src/dashboard.pug';
-var PlayerList = /** @class */ (function (_super) {
-    __extends(PlayerList, _super);
-    function PlayerList() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    PlayerList.prototype.login = function (p) {
+const rxjs_1 = require("rxjs");
+const pug = require('pug');
+const overview_pug = __dirname + '/../src/overview.pug';
+const dashboard_pug = __dirname + '/../src/dashboard.pug';
+class PlayerList extends rxjs_1.BehaviorSubject {
+    login(p) {
         if (p.name != '') {
-            var neu = this.value.find(function (player) { return player.name == p.name; }) == undefined;
+            let neu = this.value.find((player) => player.name == p.name) == undefined;
             if (neu) {
-                var next = this.getValue();
+                let next = this.getValue();
                 next.push(p);
                 this.next(next);
             }
         }
-    };
-    PlayerList.prototype.pushBuzzer = function (p) {
-        var player = this.value;
-        player.map(function (player) {
+    }
+    pushBuzzer(p) {
+        let player = this.value;
+        player.map((player) => {
             player.buzzerState = 'yellow';
             if (p.name == player.name) {
                 player.buzzerState = 'green';
             }
         });
         this.next(player);
-    };
-    PlayerList.prototype.setAllBuzzer = function (s) {
-        var value = this.value;
-        var pl = value.map(function (p) {
+    }
+    setAllBuzzer(s) {
+        let value = this.value;
+        let pl = value.map((p) => {
             p.buzzerState = s;
             return p;
         });
         this.next(pl);
-    };
-    PlayerList.prototype.pushInput = function (player, input) {
-        var pl = this.value;
-        player = pl.find(function (p) { return player.name == p.name; });
+    }
+    pushInput(player, input) {
+        let pl = this.value;
+        player = pl.find((p) => player.name == p.name);
         player.input = input;
         this.next(pl);
-    };
-    PlayerList.prototype.setInputState = function (b) {
-        var value = this.value;
-        var pl = value.map(function (p) {
+    }
+    setInputState(b) {
+        let value = this.value;
+        let pl = value.map((p) => {
             p.inputState = b;
             return p;
         });
         this.next(pl);
-    };
-    return PlayerList;
-}(rxjs_1.BehaviorSubject));
-exports.PlayerList = PlayerList;
-var Game = /** @class */ (function (_super) {
-    __extends(Game, _super);
-    function Game() {
-        return _super !== null && _super.apply(this, arguments) || this;
     }
-    Game.prototype.render = function (Index) {
+}
+exports.PlayerList = PlayerList;
+class Game extends rxjs_1.BehaviorSubject {
+    render(Index) {
         if (Index == -1) {
             return this.renderOverview();
         }
         else {
             return this.renderGrid(Index);
         }
-    };
-    Game.prototype.renderOverview = function () {
-        return pug.renderFile(overview_pug, { game: this.value });
-    };
-    Game.prototype.renderGrid = function (Index) {
-        var _a, _b;
-        var v = (_b = (_a = this.value[Index]) === null || _a === void 0 ? void 0 : _a.questionnaire) !== null && _b !== void 0 ? _b : [];
-        return pug.renderFile(dashboard_pug, { fragen: v });
-    };
-    return Game;
-}(rxjs_1.BehaviorSubject));
-exports.Game = Game;
-var Session = /** @class */ (function (_super) {
-    __extends(Session, _super);
-    function Session() {
-        return _super !== null && _super.apply(this, arguments) || this;
     }
-    Session.prototype.connect = function (token, socket) {
-        var sesss = this.value;
-        var sess = sesss.find(function (s) { return s.name == token; });
+    renderOverview() {
+        return pug.renderFile(overview_pug, { game: this.value });
+    }
+    renderGrid(Index) {
+        var _a, _b;
+        let v = (_b = (_a = this.value[Index]) === null || _a === void 0 ? void 0 : _a.questionnaire) !== null && _b !== void 0 ? _b : [];
+        return pug.renderFile(dashboard_pug, { fragen: v });
+    }
+}
+exports.Game = Game;
+class Session extends rxjs_1.BehaviorSubject {
+    connect(token, socket) {
+        let sesss = this.value;
+        let sess = sesss.find((s) => s.name == token);
         if (sess != undefined) {
             sess.connected = true;
             this.next(sesss);
             socket.join('participant');
         }
-    };
-    Session.prototype.login = function (p) {
-        var old = this.value.find(function (s) { return s.name == p.name; });
+    }
+    login(p) {
+        let old = this.value.find((s) => s.name == p.name);
         if (old == undefined) {
-            var v = this.value;
+            let v = this.value;
             v.push({ name: p.name, connected: true });
             this.next(v);
         }
         else {
             old.connected = true;
         }
-    };
-    Session.prototype.disconnect = function (token) {
-        var sesss = this.value;
-        var sess = sesss.find(function (s) { return s.name == token; });
+    }
+    disconnect(token) {
+        let sesss = this.value;
+        let sess = sesss.find((s) => s.name == token);
         if (sess != undefined) {
             sess.connected = false;
             this.next(sesss);
         }
-    };
-    Session.prototype.joinPlayerList = function (player_list) {
-        var pl = player_list.value;
-        var value = this.value;
-        value.map(function (ses) {
-            pl.find(function (p) { return p.name == ses.name; }).connected = ses.connected;
+    }
+    joinPlayerList(player_list) {
+        let pl = player_list.value;
+        let value = this.value;
+        value.map((ses) => {
+            pl.find((p) => p.name == ses.name).connected = ses.connected;
         });
         player_list.next(pl);
-    };
-    return Session;
-}(rxjs_1.BehaviorSubject));
+    }
+}
 exports.Session = Session;
 //# sourceMappingURL=socket-exports.js.map

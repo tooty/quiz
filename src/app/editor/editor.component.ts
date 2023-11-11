@@ -23,11 +23,13 @@ export class EditorComponent {
   @ViewChild('gm') mycontent: any;
 
   ngOnInit() {
-    this.addQuestionnaire();
     let stor = localStorage.getItem('game');
     if (stor != null) {
       this.game = JSON.parse(stor);
       this.changecurrentQuestionnaire(this.game[0]);
+    }
+    else {
+      this.addQuestionnaire();
     }
   }
 
@@ -55,6 +57,8 @@ export class EditorComponent {
     f = this.currentQuestionnaire;
     this.currentQuestionnaire = questionna;
     this.onGameChange(null);
+    let b:any = document.getElementById(String(this.game.indexOf(questionna)))
+    b.checked = true
   }
 
   removeFrage(frage: Frage, k: Category) {
@@ -89,6 +93,7 @@ export class EditorComponent {
 
   removeQustione(currentQuestionnaire: Questionnaire) {
     this.game = this.game.filter((q) => q != currentQuestionnaire);
+    this.changecurrentQuestionnaire(this.game[0])
     this.onGameChange(null);
   }
 
